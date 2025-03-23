@@ -1,10 +1,13 @@
-from analysis.event import plot_goal, plot_pitch_control
-from analysis.player import track_distance_covered 
+from analysis.event import *
+from analysis.player import *
+from events.match import Match
 
 # Load Event Data
 DATADIR = './data'
 game_id = 2
 
-plot_goal(DATADIR, game_id, 823)
-plot_pitch_control(DATADIR, game_id, 822)
-track_distance_covered(DATADIR, game_id)
+match = Match(DATADIR, game_id)
+
+plot_goal(match, 823)
+plot_pitch_control(match, 822)
+track_distance_covered_home(match)
