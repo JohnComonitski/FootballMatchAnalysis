@@ -1,4 +1,5 @@
 import metrica.Metrica_IO as mio
+import metrica.Metrica_Velocities as mvel
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -13,6 +14,10 @@ def track_distance_covered(DATADIR, game_id):
     tracking_away = mio.to_metric_coordinates(tracking_away)
     events = mio.to_metric_coordinates(events)
     tracking_home,tracking_away,events = mio.to_single_playing_direction(tracking_home, tracking_away, events)
+
+    # Calculate Player Velocities
+    tracking_home = mvel.calc_player_velocities(tracking_home,smoothing=True)
+    tracking_away = mvel.calc_player_velocities(tracking_away,smoothing=True)
 
     # Create A Physical Summary Dataframe For Home Players
     home_players = np.unique( [ c.split('_')[1] for c in tracking_home.columns if c[:4] == 'Home' ] )
@@ -31,3 +36,4 @@ def track_distance_covered(DATADIR, game_id):
     ax = home_summary['Distance [km]'].plot.bar(rot=0)
     ax.set_xlabel('Player')
     ax.set_ylabel('Distance covered [km]')
+    plt.savefig("distanc.png", format="png", bbox_inches="tight")
