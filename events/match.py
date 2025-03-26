@@ -23,7 +23,17 @@ class Match:
         self.tracking_away = tracking_away
 
     def event_types(self):
-        pass
+        return self.events['Type'].unique()
+
+    def subevent_types(self, event_type):
+        return self.events[self.events['Type']==event_type]['Subtype'].unique()
 
     def get_events(self, event_type):
         return self.events[self.events['Type']==event_type]
+    
+    def get_subtype_events(self, subevent_type):
+        return self.events[self.events['Subtype']==subevent_type]
+    
+    def goals(self):
+        shots = self.events[self.events.Type=='SHOT']
+        return shots[shots['Subtype'].str.contains('-GOAL')]

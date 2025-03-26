@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-def track_distance_covered_home(match):
+def track_distance_covered_home(match, name=None):
     tracking_home = match.tracking_home
 
     # Create A Physical Summary Dataframe For Home Players
@@ -22,4 +22,7 @@ def track_distance_covered_home(match):
     ax = home_summary['Distance [km]'].plot.bar(rot=0)
     ax.set_xlabel('Player')
     ax.set_ylabel('Distance covered [km]')
-    plt.savefig("distanc.png", format="png", bbox_inches="tight")
+
+    if not name:
+        name = "distance.png"
+    plt.savefig(name, format="png", bbox_inches="tight")
