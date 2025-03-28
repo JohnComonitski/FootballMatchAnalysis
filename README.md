@@ -67,7 +67,7 @@ game_id = 2
 
 track_distance_covered(match)
 ```
-\
+
 
 ### Plot the Events and Locations of Players Moments Before a Goal
 Plot the location of every player on the field the moment before the first goal and plot the passes that led up to the goal.
@@ -86,7 +86,7 @@ goal_frame = goals.iloc[1].name
 
 plot_goal(match, goal_frame)
 ```
-\
+
 
 ### Plot the Pitch Control For a Given Moment in a Match
 Plot the location of every player on the field during a given moment of a match and describe who controls what sections of the pitch using a voronoi diagram.
@@ -104,7 +104,7 @@ frame = 100
 
 plot_pitch_control(match, frame)
 ```
-\
+
 
 ## Licenses
 MIT License
