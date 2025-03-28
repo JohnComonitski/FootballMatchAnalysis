@@ -55,57 +55,53 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
 
 ## Examples
 ### Calculate Distance Traveled by Each Player
+Calculate the distance traveled in kilometers by every player in the match.
 
-    ```python
-    from analysis.event import *
-    from analysis.player import *
-    from events.match import Match
-    ```
+```python
+from analysis.player import *
+from events.match import Match
 
-    ```python
-    from analysis.player import *
-    from events.match import Match
+# Load Event Data
+DATADIR = './data'
+game_id = 2
 
-    # Load Event Data
-    DATADIR = './data'
-    game_id = 2
-
-    track_distance_covered(match)
-    ```
+track_distance_covered(match)
+```
 
 ### Plot the Events and Locations of Players Moments Before a Goal
+Plot the location of every player on the field the moment before the first goal and plot the passes that led up to the goal.
 
-    ```python
-    from analysis.player import *
-    from events.match import Match
+```python
+from analysis.player import *
+from events.match import Match
 
-    # Load Event Data
-    DATADIR = './data'
-    game_id = 2
+# Load Event Data
+DATADIR = './data'
+game_id = 2
 
-    match = Match(DATADIR, game_id)
-    goals = match.goals()
-    goal_frame = goals.iloc[1].name
+match = Match(DATADIR, game_id)
+goals = match.goals()
+goal_frame = goals.iloc[1].name
 
-    plot_goal(match, goal_frame)
-    ```
+plot_goal(match, goal_frame)
+```
 
 ### Plot the Pitch Control of a Given Moment in a Match
+Plot the location of every player on the field during a given moment of a match and describe who controls what sections of the pitch using a voronoi diagram.
 
-    ```python
-    from analysis.event import *
-    from events.match import Match
+```python
+from analysis.event import *
+from events.match import Match
 
-    # Load Event Data
-    DATADIR = './data'
-    game_id = 2
+# Load Event Data
+DATADIR = './data'
+game_id = 2
 
-    match = Match(DATADIR, game_id)
-    goals = match.goals()
-    goal_frame = goals.iloc[1].name
+match = Match(DATADIR, game_id)
+frame = 100
 
-    plot_pitch_control(match, goal_frame)
-    ```
+plot_pitch_control(match, frame)
+```
 
 ## Licenses
 MIT License
