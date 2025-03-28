@@ -14,19 +14,19 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
 
 ## Getting Started
 
-1. clone the repository
+1. Clone the repository
 
    ```shell
    git clone https://github.com/JohnComonitski/FootballMatchAnalysis.git
    ```
 
-2. move to the project directory
+2. Move to the project directory
 
    ```shell
    cd FootballMatchAnalysis
    ```
 
-3. create and activate a Python
+3. Create and activate a Python
    [virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments).
    On GNU/Linux systems this is as easy as:
 
@@ -36,11 +36,19 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
    # Work inside the environment.
    ```
 
-4. install the Python dependencies
+4. Install the Python dependencies
 
    ```shell
    pip install -r requirements.txt
    ```
+
+5. In your python script, import the supporting libraries
+
+  ```python
+  from analysis.event import *
+  from analysis.player import *
+  from events.match import Match
+  ```
 
 ## Features
 ...
