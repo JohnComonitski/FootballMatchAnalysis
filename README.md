@@ -44,11 +44,11 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
 
 5. In your python script, import the supporting libraries
 
-  ```python
-  from analysis.event import *
-  from analysis.player import *
-  from events.match import Match
-  ```
+    ```python
+    from analysis.event import *
+    from analysis.player import *
+    from events.match import Match
+    ```
 
 ## Features
 ...
