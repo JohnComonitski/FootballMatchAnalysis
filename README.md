@@ -57,6 +57,12 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
 ### Calculate Distance Traveled by Each Player
 
     ```python
+    from analysis.event import *
+    from analysis.player import *
+    from events.match import Match
+    ```
+
+    ```python
     from analysis.player import *
     from events.match import Match
 
