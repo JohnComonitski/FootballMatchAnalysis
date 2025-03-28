@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-def track_distance_covered_home(match, name=None):
+def track_distance_covered(match, name=None):
     tracking_home = match.tracking_home
 
     # Create A Physical Summary Dataframe For Home Players

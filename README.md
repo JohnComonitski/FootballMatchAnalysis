@@ -54,7 +54,49 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
 ...
 
 ## Examples
-...
+### Calculate Distance Traveled by Each Player
+    ```python
+    from analysis.player import *
+    from events.match import Match
+
+    # Load Event Data
+    DATADIR = './data'
+    game_id = 2
+
+    track_distance_covered(match)
+    ```
+
+### Plot the Events and Locations of Players Moments Before a Goal
+    ```python
+    from analysis.player import *
+    from events.match import Match
+
+    # Load Event Data
+    DATADIR = './data'
+    game_id = 2
+
+    match = Match(DATADIR, game_id)
+    goals = match.goals()
+    goal_frame = goals.iloc[1].name
+
+    plot_goal(match, goal_frame)
+    ```
+
+### Plot the Pitch Control of a Given Moment in a Match
+    ```python
+    from analysis.event import *
+    from events.match import Match
+
+    # Load Event Data
+    DATADIR = './data'
+    game_id = 2
+
+    match = Match(DATADIR, game_id)
+    goals = match.goals()
+    goal_frame = goals.iloc[1].name
+
+    plot_pitch_control(match, goal_frame)
+    ```
 
 ## Licenses
 MIT License
