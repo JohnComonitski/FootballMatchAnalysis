@@ -12,8 +12,35 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
   - [Licenses](#license)
 
 
-## Documentation
-...
+## Getting Started
+
+1. clone the repository
+
+   ```shell
+   git clone https://github.com/JohnComonitski/FootballMatchAnalysis.git
+   ```
+
+2. move to the project directory
+
+   ```shell
+   cd FootballMatchAnalysis
+   ```
+
+3. create and activate a Python
+   [virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments).
+   On GNU/Linux systems this is as easy as:
+
+   ```shell
+   python3 -m venv .venv
+   . .venv/bin/activate
+   # Work inside the environment.
+   ```
+
+4. install the Python dependencies
+
+   ```shell
+   pip install -r requirements.txt
+   ```
 
 ## Features
 ...
