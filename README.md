@@ -9,6 +9,7 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
   - [Features](#features)
   - [Getting Tracking Data](#getting-tracking-data)
   - [Examples](#examples)
+  - [Resources And Sources](#resources-and-sources)
   - [Licenses](#license)
 
 
@@ -137,6 +138,12 @@ game_id = 2
 match = Match(DATADIR, game_id)
 track_distance_covered(match)
 ```
+
+## Resources and Sources
+ - [Friends of Tracking](https://www.youtube.com/@friendsoftracking755)
+ - [Introduction to Football Analysis with Tracking Data in Python](https://www.youtube.com/watch?v=8TrleFklEsE)
+ - [Metrica Analysis Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking)
+ - [Metrica Tracking & Event Data](https://github.com/metrica-sports/sample-data)
 
 ## Licenses
 MIT License
