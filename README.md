@@ -54,18 +54,32 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
 ...
 
 ## Examples
-### Calculate Distance Traveled by Each Player
-Calculate the distance traveled in kilometers by every player in the match.
+### Get all events types that happen in a match
+Get a list of every type of event that occoured in the match.
 
 ```python
-from analysis.player import *
 from events.match import Match
 
 # Load Event Data
 DATADIR = './data'
 game_id = 2
 
-track_distance_covered(match)
+match = Match(DATADIR, game_id)
+match.event_types()
+```
+
+### Get All Moments an Event Occoured
+Get a list of moments that a specifc event occoured in the match.
+
+```python
+from events.match import Match
+
+# Load Event Data
+DATADIR = './data'
+game_id = 2
+
+match = Match(DATADIR, game_id)
+match.get_events("PASS")
 ```
 
 ### Plot the Events and Locations of Players Moments Before a Goal
@@ -102,6 +116,21 @@ frame = 100
 
 plot_pitch_control(match, frame)
 ``` 
+
+### Calculate Distance Traveled by Each Player
+Calculate the distance traveled in kilometers by every player in the match.
+
+```python
+from analysis.player import *
+from events.match import Match
+
+# Load Event Data
+DATADIR = './data'
+game_id = 2
+
+match = Match(DATADIR, game_id)
+track_distance_covered(match)
+```
 
 ## Licenses
 MIT License
