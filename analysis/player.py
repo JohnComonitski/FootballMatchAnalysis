@@ -26,3 +26,7 @@ def track_distance_covered_home(match, name=None):
     if not name:
         name = "distance.png"
     plt.savefig(name, format="png", bbox_inches="tight")
+
+def positions_at_kickoff(match):
+    pass
+
