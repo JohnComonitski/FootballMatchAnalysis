@@ -12,4 +12,4 @@ goal_frame = goals.iloc[1].name
 
 plot_goal(match, goal_frame)
 plot_pitch_control(match, goal_frame)
-track_distance_covered_home(match)
+track_distance_covered(match)

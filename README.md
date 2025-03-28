@@ -55,6 +55,7 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
 
 ## Examples
 ### Calculate Distance Traveled by Each Player
+
     ```python
     from analysis.player import *
     from events.match import Match
@@ -67,6 +68,7 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
     ```
 
 ### Plot the Events and Locations of Players Moments Before a Goal
+
     ```python
     from analysis.player import *
     from events.match import Match
@@ -83,6 +85,7 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
     ```
 
 ### Plot the Pitch Control of a Given Moment in a Match
+
     ```python
     from analysis.event import *
     from events.match import Match
