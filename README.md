@@ -51,10 +51,16 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
     ```
 
 ## Features
-...
+- ⚽ Reduces friction when working on match analysis
+- 📊 Aggregate match events for player and opposition analysis
+- 🏃 Plot every event in a match
+- 🔑 Quickly visualize key moments in a match
+- 🔎 Identify how player move impacted key moments in a match
+- 🏃 Calculate physical statistics for all players on the pitch
+
 
 ## Examples
-### Get all events types that happen in a match
+### Get All Events Types That Happen in a Match
 Get a list of every type of event that occoured in the match.
 
 ```python
