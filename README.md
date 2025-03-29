@@ -166,12 +166,12 @@ track_distance_covered(match)
  - [Official Metrica Tracking & Event Data](https://github.com/metrica-sports/sample-data)
  - [Generate Your Own Tracking & Event Data](https://github.com/JohnComonitski/FootballTrackingDataGeneration)
   > [!NOTE]
-  > Data should be added to the ./data directory and each match should be contained to it's own directory in the following format
+  > Data should be added to the ./data directory and each match should be contained to its own directory in the following format \
   > 📁 data
-  >   - 📁 MATCH_ID
-  >     - 📄 MATCH_ID_RawEventsData.csv
-  >     - 📄 MATCH_ID_RawTrackingData_Away_Team.csv
-  >     - 📄 MATCH_ID_RawTrackingData_Home_Team.csv
+  >   > 📁 MATCH_ID
+  >     > 📄 MATCH_ID_RawEventsData.csv
+  >     > 📄 MATCH_ID_RawTrackingData_Away_Team.csv
+  >     > 📄 MATCH_ID_RawTrackingData_Home_Team.csv
 
 ## Resources
  - [Friends of Tracking](https://www.youtube.com/@friendsoftracking755) - The best resource on the internet for advanced football analysis and data science. This library stands on the shoulders of their great work!
