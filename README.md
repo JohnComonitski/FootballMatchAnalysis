@@ -9,7 +9,8 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
   - [Features](#features)
   - [Getting Tracking Data](#getting-tracking-data)
   - [Examples](#examples)
-  - [Resources And Sources](#resources-and-sources)
+  - [Data Sources](#data-sources)
+  - [Resources](#resources)
   - [Licenses](#license)
 
 
@@ -27,7 +28,23 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
    cd FootballMatchAnalysis
    ```
 
-3. Create and activate a Python
+3. Create a data directory
+
+   ```shell
+   mkdir data
+   ```
+  > [!NOTE]
+  > This is where you will be storing your tracking data and event data.
+
+4. Download an EPV Grid
+   Download Friends of Tracking's [EPV_grid.csv](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking/blob/master/EPV_grid.csv) and copy it to your data directory
+    ```shell
+   cp EPV_grid.csv ./data/EPV_grid.csv
+   ```
+  > [!NOTE]
+  > This will only be needed if you inted to do expected point value analysis.
+
+5. Create and activate a Python
    [virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments).
    On GNU/Linux systems this is as easy as:
 
@@ -37,13 +54,13 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
    # Work inside the environment.
    ```
 
-4. Install the Python dependencies
+6. Install the Python dependencies
 
    ```shell
    pip install -r requirements.txt
    ```
 
-5. In your python script, import the supporting libraries
+7. In your python script, import the supporting libraries
 
     ```python
     from analysis.event import *
@@ -54,10 +71,10 @@ A Python library that utilize's Friend's of Tracking's [Metrica Tracking Data Li
 ## Features
 - ⚽ Reduces friction when working on match analysis
 - 📊 Aggregate match events for player and opposition analysis
-- 🏃 Plot every event in a match
+- 🗺️ Plot every event in a match
 - 🔑 Quickly visualize key moments in a match
-- 🔎 Identify how player move impacted key moments in a match
-- 🏃 Calculate physical statistics for all players on the pitch
+- 🔎 Identify how player movement impacted key moments in a match
+- 🏃 Calculate the physical statistics for all players on the pitch
 
 
 ## Examples
@@ -139,12 +156,20 @@ match = Match(DATADIR, game_id)
 track_distance_covered(match)
 ```
 
-## Resources and Sources
+## Data Sources
+ - [Metrica Tracking & Event Data](https://github.com/metrica-sports/sample-data)
+
+## Resources
  - [Friends of Tracking](https://www.youtube.com/@friendsoftracking755)
  - [Introduction to Football Analysis with Tracking Data in Python](https://www.youtube.com/watch?v=8TrleFklEsE)
  - [Metrica Analysis Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking)
- - [Metrica Tracking & Event Data](https://github.com/metrica-sports/sample-data)
+
 
 ## Licenses
 MIT License
 Copyright (c) 2025 John Comonitski
+
+- Mention wrappers in description
+- Update Getting Started to include data folder and getting data
+- Add descriptions to resources
+- Create & Write data sources section
