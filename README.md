@@ -167,8 +167,8 @@ track_distance_covered(match)
  - [Generate Your Own Tracking & Event Data](https://github.com/JohnComonitski/FootballTrackingDataGeneration)
   > [!NOTE]
   > Data should be added to the ./data directory and each match should be contained to its own directory in the following format.
-
-  > ```📁 data
+  > ```
+  > 📁 data
   >    📁 MATCH_ID
   >      📄 MATCH_ID_RawEventsData.csv
   >      📄 MATCH_ID_RawTrackingData_Away_Team.csv
