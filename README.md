@@ -2,6 +2,7 @@
 
 A Python library that builds on Friend's of Tracking's [Metrica Tracking Data Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) and creates easy-to-use wrapper functions for many of the match analysis examples in Friend's of Tracking's [Tracking Data Tutorial Series](https://www.youtube.com/watch?v=8TrleFklEsE). Additionally, this library includes a new Match object which makes the extraction & analysis of key match moments as simple as a few lines of Python.
 
+### Table of Contents
 <!--TOC-->
 
 - [Football Match Analysis](#footbal-match-analysis)
