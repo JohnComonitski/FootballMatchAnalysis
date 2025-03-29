@@ -160,6 +160,8 @@ match = Match(DATADIR, game_id)
 track_distance_covered(match)
 ```
 
+![distance](./examples/distance.png)
+
 ## Data Sources
  - [Metrica Tracking & Event Data](https://github.com/metrica-sports/sample-data)
 
