@@ -1,6 +1,6 @@
 # Football Match Analysis
 
-A Python library that builds apon Friend's of Tracking's [Metrica Tracking Data Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) and creates easy to use wrapper functions & for many of the match analysis examples from Friend's of Tracking's [Tracking Data Tutorial Series](https://www.youtube.com/watch?v=8TrleFklEsE) as well as a new Match object which makes the extraction & analysis of key match moments as simple as a few lines of python.
+A Python library that builds apon Friend's of Tracking's [Metrica Tracking Data Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) and creates easy to use wrapper functions for many of the match analysis examples in Friend's of Tracking's [Tracking Data Tutorial Series](https://www.youtube.com/watch?v=8TrleFklEsE). Additionally, this library includes a new Match object which makes the extraction & analysis of key match moments as simple as a few lines of python.
 
 <!--TOC-->
 
@@ -166,8 +166,9 @@ track_distance_covered(match)
  - [Metrica Tracking & Event Data](https://github.com/metrica-sports/sample-data)
 
 ## Resources
- - [Friends of Tracking](https://www.youtube.com/@friendsoftracking755)
+ - [Friends of Tracking](https://www.youtube.com/@friendsoftracking755) - The best resource on the internet for advance football analysis and data science. This library stands on the shoulders of their great work!
  - [Introduction to Football Analysis with Tracking Data in Python](https://www.youtube.com/watch?v=8TrleFklEsE)
+  - Learn the fundementals of working with tracking data. Much of what you learn in this tutorial was baked into this library.
  - [Metrica Analysis Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking)
 
 
@@ -175,6 +176,5 @@ track_distance_covered(match)
 MIT License
 Copyright (c) 2025 John Comonitski
 
-- Mention wrappers in description
 - Add descriptions to resources
 - Create & Write data sources section
