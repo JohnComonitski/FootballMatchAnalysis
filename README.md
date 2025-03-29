@@ -1,6 +1,6 @@
 # Football Match Analysis
 
-A Python library that builds apon Friend's of Tracking's [Metrica Tracking Data Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) and creates easy to use wrapper functions for many of the match analysis examples in Friend's of Tracking's [Tracking Data Tutorial Series](https://www.youtube.com/watch?v=8TrleFklEsE). Additionally, this library includes a new Match object which makes the extraction & analysis of key match moments as simple as a few lines of python.
+A Python library that builds on Friend's of Tracking's [Metrica Tracking Data Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) and creates easy-to-use wrapper functions for many of the match analysis examples in Friend's of Tracking's [Tracking Data Tutorial Series](https://www.youtube.com/watch?v=8TrleFklEsE). Additionally, this library includes a new Match object which makes the extraction & analysis of key match moments as simple as a few lines of Python.
 
 <!--TOC-->
 
@@ -42,7 +42,7 @@ A Python library that builds apon Friend's of Tracking's [Metrica Tracking Data 
    cp EPV_grid.csv ./data/EPV_grid.csv
    ```
   > [!NOTE]
-  > This will only be needed if you inted to do expected point value analysis.
+  > This will only be needed if you intend to do Expected Point Value analysis.
 
 5. Create and activate a Python
    [virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments).
@@ -60,7 +60,7 @@ A Python library that builds apon Friend's of Tracking's [Metrica Tracking Data 
    pip install -r requirements.txt
    ```
 
-7. In your python script, import the supporting libraries
+7. In your Python script, import the supporting libraries
 
     ```python
     from analysis.event import *
@@ -93,7 +93,7 @@ match.event_types()
 ```
 
 ### Get All Moments an Event Occoured
-Get a list of moments that a specifc event occoured in the match.
+Get a list of moments when a specific event occurred in the match.
 
 ```python
 from events.match import Match
@@ -127,7 +127,7 @@ plot_goal(match, goal_frame)
 ![goal](./examples/goal.png)
 
 ### Plot Pitch Control For a Given Moment in a Match
-Plot the location of every player on the field during a given moment of a match and describe who controls what sections of the pitch using a voronoi diagram.
+Plot the location of every player on the field during a given moment of a match and describe who controls what sections of the pitch using a Voronoi diagram.
 
 ```python
 from analysis.event import *
@@ -166,15 +166,11 @@ track_distance_covered(match)
  - [Metrica Tracking & Event Data](https://github.com/metrica-sports/sample-data)
 
 ## Resources
- - [Friends of Tracking](https://www.youtube.com/@friendsoftracking755) - The best resource on the internet for advance football analysis and data science. This library stands on the shoulders of their great work!
- - [Introduction to Football Analysis with Tracking Data in Python](https://www.youtube.com/watch?v=8TrleFklEsE)
-  - Learn the fundementals of working with tracking data. Much of what you learn in this tutorial was baked into this library.
- - [Metrica Analysis Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking)
+ - [Friends of Tracking](https://www.youtube.com/@friendsoftracking755) - The best resource on the internet for advanced football analysis and data science. This library stands on the shoulders of their great work!
+ - [Introduction to Football Analysis with Tracking Data in Python](https://www.youtube.com/watch?v=8TrleFklEsE) - Learn the fundamentals of working with tracking data. Much of what you learn & use in this tutorial is the backbone of this library.
+ - [Metrica Analysis Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) - Python library for easily working with Metrica tracking & event data. This library would not be possilbe without this library.
 
 
 ## Licenses
 MIT License
 Copyright (c) 2025 John Comonitski
-
-- Add descriptions to resources
-- Create & Write data sources section
