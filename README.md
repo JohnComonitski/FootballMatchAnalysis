@@ -124,6 +124,8 @@ goal_frame = goals.iloc[1].name
 plot_goal(match, goal_frame)
 ```
 
+![goal](./examples/goal.png)
+
 ### Plot Pitch Control For a Given Moment in a Match
 Plot the location of every player on the field during a given moment of a match and describe who controls what sections of the pitch using a voronoi diagram.
 
@@ -141,7 +143,7 @@ frame = 100
 plot_pitch_control(match, frame)
 ``` 
 
-[pitch control](./examples/pitch_control.png)
+![pitch control](./examples/pitch_control.png)
 
 ### Calculate Distance Traveled by Each Player
 Calculate the distance traveled in kilometers by every player in the match.
