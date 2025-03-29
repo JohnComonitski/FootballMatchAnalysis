@@ -141,6 +141,8 @@ frame = 100
 plot_pitch_control(match, frame)
 ``` 
 
+[pitch control](./examples/pitch_control.png)
+
 ### Calculate Distance Traveled by Each Player
 Calculate the distance traveled in kilometers by every player in the match.
 
