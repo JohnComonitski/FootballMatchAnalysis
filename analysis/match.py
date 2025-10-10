@@ -12,6 +12,7 @@ class Match:
         tracking_away = mio.tracking_data(DATADIR,game_id, 'Away')
         tracking_home = mio.to_metric_coordinates(tracking_home)
         tracking_away = mio.to_metric_coordinates(tracking_away)
+        events = mio.to_metric_coordinates(events)
         tracking_home,tracking_away,events = mio.to_single_playing_direction(tracking_home,tracking_away,events)
         
         # Calculate Player Velocities
@@ -37,3 +38,6 @@ class Match:
     def goals(self):
         shots = self.events[self.events.Type=='SHOT']
         return shots[shots['Subtype'].str.contains('-GOAL')]
+    
+    def players(self):
+        return self.events['From'].drop_duplicates().tolist()

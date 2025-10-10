@@ -1,6 +1,5 @@
 from analysis.event import *
-from analysis.player import *
-from events.match import Match
+from analysis.match import Match
 
 # Load Event Data
 DATADIR = './data'

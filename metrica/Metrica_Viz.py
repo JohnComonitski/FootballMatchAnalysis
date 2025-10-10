@@ -220,7 +220,6 @@ def save_match_clip(hometeam,awayteam, fpath, fname='clip_test', figax=None, fra
     plt.clf()
     plt.close(fig)    
 
-
 def plot_events( events, figax=None, field_dimen = (106.0,68), indicators = ['Marker','Arrow'], color='r', marker_style = 'o', alpha = 0.5, annotate=False):
     """ plot_events( events )
     
@@ -257,7 +256,43 @@ def plot_events( events, figax=None, field_dimen = (106.0,68), indicators = ['Ma
             ax.text( row['Start X'], row['Start Y'], textstring, fontsize=10, color=color)
     return fig,ax
 
-def plot_pitchcontrol_for_event( event_id, events,  tracking_home, tracking_away, PPCF, alpha = 0.7, include_player_velocities=True, annotate=False, field_dimen = (106.0,68)):
+def plot_event( frame, figax=None, field_dimen = (106.0,68), indicators = 'Marker', color='r', marker_style = 'o', alpha = 0.5, annotate=False):
+    """ plot_events( events )
+    
+    Plots Metrica event positions on a football pitch. event data can be a single or several rows of a data frame. All distances should be in meters.
+    
+    Parameters
+    -----------
+        events: row (i.e. instant) of the home team tracking data frame
+        fig,ax: Can be used to pass in the (fig,ax) objects of a previously generated pitch. Set to (fig,ax) to use an existing figure, or None (the default) to generate a new pitch plot, 
+        field_dimen: tuple containing the length and width of the pitch in meters. Default is (106,68)
+        indicators: List containing choices on how to plot the event. 'Marker' places a marker at the 'Start X/Y' location of the event; 'Arrow' draws an arrow from the start to end locations. Can choose one or both.
+        color: color of indicator. Default is 'r' (red)
+        marker_style: Marker type used to indicate the event position. Default is 'o' (filled ircle).
+        alpha: alpha of event marker. Default is 0.5    
+        annotate: Boolean determining whether text annotation from event data 'Type' and 'From' fields is shown on plot. Default is False.
+        
+    Returrns
+    -----------
+       fig,ax : figure and aixs objects (so that other data can be plotted onto the pitch)
+
+    """
+    if figax is None: # create new pitch 
+        fig,ax = plot_pitch( field_dimen = field_dimen )
+    else: # overlay on a previously generated pitch
+        fig,ax = figax 
+
+    if 'Marker' in indicators:
+        ax.plot(  frame['Start X'], frame['Start Y'], color+marker_style, alpha=alpha )
+    if 'Arrow' in indicators:
+        ax.annotate("", xy=frame[['End X','End Y']], xytext=frame[['Start X','Start Y']], alpha=alpha, arrowprops=dict(alpha=alpha,width=0.5,headlength=4.0,headwidth=4.0,color=color),annotation_clip=False)
+    if annotate:
+        textstring = frame['Type'] + ': ' + frame['From']
+        ax.text( frame['Start X'], frame['Start Y'], textstring, fontsize=10, color=color)
+
+    return fig,ax
+
+def plot_pitchcontrol_for_event( event_id, events,  tracking_home, tracking_away, PPCF, alpha = 0.7, include_player_velocities=True, annotate=False, field_dimen = (106.0,68), figax=None):
     """ plot_pitchcontrol_for_event( event_id, events,  tracking_home, tracking_away, PPCF )
     
     Plots the pitch control surface at the instant of the event given by the event_id. Player and ball positions are overlaid.
@@ -281,13 +316,16 @@ def plot_pitchcontrol_for_event( event_id, events,  tracking_home, tracking_away
        fig,ax : figure and aixs objects (so that other data can be plotted onto the pitch)
 
     """    
-
     # pick a pass at which to generate the pitch control surface
     pass_frame = events.loc[event_id]['Start Frame']
     pass_team = events.loc[event_id].Team
     
     # plot frame and event
-    fig,ax = plot_pitch(field_color='white', field_dimen = field_dimen)
+    if figax is None: # create new pitch 
+        fig,ax = plot_pitch(field_color='white', field_dimen = field_dimen)
+    else: # overlay on a previously generated pitch
+        fig,ax = figax 
+
     plot_frame( tracking_home.loc[pass_frame], tracking_away.loc[pass_frame], figax=(fig,ax), PlayerAlpha=alpha, include_player_velocities=include_player_velocities, annotate=annotate )
     plot_events( events.loc[event_id:event_id], figax = (fig,ax), indicators = ['Marker','Arrow'], annotate=False, color= 'k', alpha=1 )
     
