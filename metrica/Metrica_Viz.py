@@ -283,13 +283,50 @@ def plot_event( frame, figax=None, field_dimen = (106.0,68), indicators = 'Marke
         fig,ax = figax 
 
     if 'Marker' in indicators:
-        ax.plot(  frame['Start X'], frame['Start Y'], color+marker_style, alpha=alpha )
+        ax.plot(  frame['Start X'], frame['Start Y'], color, marker=marker_style, alpha=alpha )
     if 'Arrow' in indicators:
         ax.annotate("", xy=frame[['End X','End Y']], xytext=frame[['Start X','Start Y']], alpha=alpha, arrowprops=dict(alpha=alpha,width=0.5,headlength=4.0,headwidth=4.0,color=color),annotation_clip=False)
+    if 'X' in indicators:
+        ax.plot(  frame['End X'], frame['End Y'], color, marker='x', alpha=alpha )
     if annotate:
         textstring = frame['Type'] + ': ' + frame['From']
         ax.text( frame['Start X'], frame['Start Y'], textstring, fontsize=10, color=color)
 
+    return fig,ax
+
+def plot_moment( frame=None, hometeam=None, awayteam=None, figax=None, team_colors=('r','b'), field_dimen = (106.0,68.0), include_player_velocities=False, PlayerMarkerSize=10, PlayerAlpha=0.7, annotate=False ):
+    if figax is None: # create new pitch 
+        fig,ax = plot_pitch( field_dimen = field_dimen )
+    else: # overlay on a previously generated pitch
+        fig,ax = figax # unpack tuple
+    # plot home & away teams in order
+
+    for team,color in zip( [hometeam,awayteam], team_colors) :
+        x_columns = [c for c in team.keys() if c[-2:].lower()=='_x' and c!='ball_x'] # column header for player x positions
+        y_columns = [c for c in team.keys() if c[-2:].lower()=='_y' and c!='ball_y'] # column header for player y positions
+        ax.plot( team[x_columns], team[y_columns], color+'o', markersize=PlayerMarkerSize, alpha=PlayerAlpha ) # plot player positions
+        if include_player_velocities:
+            vx_columns = ['{}_vx'.format(c[:-2]) for c in x_columns] # column header for player x positions
+            vy_columns = ['{}_vy'.format(c[:-2]) for c in y_columns] # column header for player y positions
+            ax.quiver( team[x_columns], team[y_columns], team[vx_columns], team[vy_columns], color=color, scale_units='inches', scale=10.,width=0.0015,headlength=5,headwidth=3,alpha=PlayerAlpha)
+        if annotate:
+            [ ax.text( team[x]+0.5, team[y]+0.5, x.split('_')[1], fontsize=10, color=color  ) for x,y in zip(x_columns,y_columns) if not ( np.isnan(team[x]) or np.isnan(team[y]) ) ] 
+    
+    # plot ball
+    ax.plot( hometeam['ball_x'], hometeam['ball_y'], 'ko', markersize=6, alpha=1.0, linewidth=0)
+    
+    # plot event
+    if frame is not None:
+        indicator = "Marker"
+        if( frame["Type"] in [ "PASS", "SHOT" ] ):
+            indicator = "Arrow"
+
+        if( frame["Type"] == "BALL LOST" and frame["Subtype"] == "INTERCEPTION" ):
+            indicator = [ "Arrow", "X" ]
+
+        #print( frame, (fig,ax), field_dimen, "#000000", indicator, False )
+        fig,ax = plot_event( frame, figax=(fig,ax), field_dimen = field_dimen, color="#000000", indicators=indicator, annotate=False )
+    
     return fig,ax
 
 def plot_pitchcontrol_for_event( event_id, events,  tracking_home, tracking_away, PPCF, alpha = 0.7, include_player_velocities=True, annotate=False, field_dimen = (106.0,68), figax=None):
@@ -329,6 +366,25 @@ def plot_pitchcontrol_for_event( event_id, events,  tracking_home, tracking_away
     plot_frame( tracking_home.loc[pass_frame], tracking_away.loc[pass_frame], figax=(fig,ax), PlayerAlpha=alpha, include_player_velocities=include_player_velocities, annotate=annotate )
     plot_events( events.loc[event_id:event_id], figax = (fig,ax), indicators = ['Marker','Arrow'], annotate=False, color= 'k', alpha=1 )
     
+    # plot pitch control surface
+    if pass_team=='Home':
+        cmap = 'bwr'
+    else:
+        cmap = 'bwr_r'
+    ax.imshow(np.flipud(PPCF), extent=(-field_dimen[0]/2., field_dimen[0]/2., -field_dimen[1]/2., field_dimen[1]/2.),interpolation='spline36',vmin=0.0,vmax=1.0,cmap=cmap,alpha=0.5)
+
+    return fig,ax
+
+def plot_pitchcontrol_for_moment( PPCF, field_dimen = (106.0,68), figax=None):  
+    # pick a pass at which to generate the pitch control surface
+    pass_team = "Home"
+    
+    # plot frame and event
+    if figax is None: # create new pitch 
+        fig,ax = plot_pitch(field_color='white', field_dimen = field_dimen)
+    else: # overlay on a previously generated pitch
+        fig,ax = figax 
+
     # plot pitch control surface
     if pass_team=='Home':
         cmap = 'bwr'

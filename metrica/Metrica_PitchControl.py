@@ -34,6 +34,7 @@ The 'player' class collects and stores trajectory information for each player re
 """
 
 import numpy as np
+import math
 
 
 def initialise_players(team,teamname,params,GKid):
@@ -268,6 +269,64 @@ def generate_pitch_control_for_event(event_id, events, tracking_home, tracking_a
     assert 1-checksum < params['model_converge_tol'], "Checksum failed: %1.3f" % (1-checksum)
     return PPCFa,xgrid,ygrid
 
+
+def generate_pitch_control_for_moment(moment, tracking_home, tracking_away, params, GK_numbers, field_dimen = (106.,68.,), n_grid_cells_x = 50, offsides=True):
+    # get the details of the event (frame, team in possession, ball_start_position)
+    ball = (moment.ball.x, moment.ball.y)
+    pass_team = moment.possession().team
+    ball_start_pos = np.array([ball[0], ball[1]])
+    # break the pitch down into a grid
+    n_grid_cells_y = math.ceil(n_grid_cells_x*field_dimen[1]/field_dimen[0])
+    dx = field_dimen[0]/n_grid_cells_x
+    dy = field_dimen[1]/n_grid_cells_y
+    xgrid = np.arange(n_grid_cells_x)*dx - field_dimen[0]/2. + dx/2.
+    ygrid = np.arange(n_grid_cells_y)*dy - field_dimen[1]/2. + dy/2.
+    # initialise pitch control grids for attacking and defending teams 
+    PPCFa = np.zeros( shape = (len(ygrid), len(xgrid)) )
+    PPCFd = np.zeros( shape = (len(ygrid), len(xgrid)) )
+    # initialise player positions and velocities for pitch control calc (so that we're not repeating this at each grid cell position)
+    if pass_team=='Home':
+        attacking_players = initialise_players(tracking_home.loc[0],'Home',params,GK_numbers[0])
+        defending_players = initialise_players(tracking_away.loc[0],'Away',params,GK_numbers[1])
+    elif pass_team=='Away':
+        defending_players = initialise_players(tracking_home.loc[0],'Home',params,GK_numbers[0])
+        attacking_players = initialise_players(tracking_away.loc[0],'Away',params,GK_numbers[1])
+    else:
+        assert False, "Team in possession must be either home or away"
+        
+    # find any attacking players that are offside and remove them from the pitch control calculation
+    if offsides:
+        attacking_players = check_offsides( attacking_players, defending_players, ball_start_pos, GK_numbers)
+    # calculate pitch pitch control model at each location on the pitch
+    for i in range( len(ygrid) ):
+        for j in range( len(xgrid) ):
+            target_position = np.array( [xgrid[j], ygrid[i]] )
+            PPCFa[i,j],PPCFd[i,j] = calculate_pitch_control_at_target(target_position, attacking_players, defending_players, ball_start_pos, params)
+    # check probabilitiy sums within convergence
+    checksum = np.sum( PPCFa + PPCFd ) / float(n_grid_cells_y*n_grid_cells_x ) 
+    assert 1-checksum < params['model_converge_tol'], "Checksum failed: %1.3f" % (1-checksum)
+    return PPCFa,xgrid,ygrid
+
+def calculate_pitch_control_at_target_for_moment(moment, target, tracking_home, tracking_away, params, GK_numbers, field_dimen = (106.,68.,), n_grid_cells_x = 50, offsides=True):
+    ball = (moment.ball.x, moment.ball.y)
+    pass_team = moment.possession().team
+    ball_start_pos = np.array([ball[0], ball[1]])
+    target = np.array([target[0], target[1]])
+
+    # initialise player positions and velocities for pitch control calc (so that we're not repeating this at each grid cell position)
+    if pass_team=='Home':
+        attacking_players = initialise_players(tracking_home.loc[0],'Home',params,GK_numbers[0])
+        defending_players = initialise_players(tracking_away.loc[0],'Away',params,GK_numbers[1])
+    elif pass_team=='Away':
+        defending_players = initialise_players(tracking_home.loc[0],'Home',params,GK_numbers[0])
+        attacking_players = initialise_players(tracking_away.loc[0],'Away',params,GK_numbers[1])
+    else:
+        assert False, "Team in possession must be either home or away"
+
+    return calculate_pitch_control_at_target(target, attacking_players, defending_players, ball_start_pos, params)[0]
+        
+
+
 def calculate_pitch_control_at_target(target_position, attacking_players, defending_players, ball_start_pos, params):
     """ calculate_pitch_control_at_target
     
@@ -287,13 +346,14 @@ def calculate_pitch_control_at_target(target_position, attacking_players, defend
         PPCFdef: Pitch control probability for the defending team ( 1-PPCFatt-PPCFdef <  params['model_converge_tol'] )
 
     """
+
     # calculate ball travel time from start position to end position.
     if ball_start_pos is None or any(np.isnan(ball_start_pos)): # assume that ball is already at location
         ball_travel_time = 0.0 
     else:
         # ball travel time is distance to target position from current ball position divided assumed average ball speed
         ball_travel_time = np.linalg.norm( target_position - ball_start_pos )/params['average_ball_speed']
-    
+
     # first get arrival time of 'nearest' attacking player (nearest also dependent on current velocity)
     tau_min_att = np.nanmin( [p.simple_time_to_intercept(target_position) for p in attacking_players] )
     tau_min_def = np.nanmin( [p.simple_time_to_intercept(target_position ) for p in defending_players] )
