@@ -1,12 +1,12 @@
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.colors import LinearSegmentedColormap
+import matplotlib.pyplot as plt
+import FootballMatchAnalysis.metrica.Metrica_IO as mio
+import FootballMatchAnalysis.metrica.Metrica_Viz as mviz
+from FootballMatchAnalysis.analysis.xt import *
+from FootballMatchAnalysis.analysis.xg import *
 import numpy as np
 import math
-import metrica.Metrica_IO as mio
-import metrica.Metrica_Viz as mviz
-import matplotlib.pyplot as plt
-from analysis.xt import *
-from analysis.xg import *
 
 class Plot:
     def __init__(self, fig = None, ax = None):

@@ -1,9 +1,9 @@
-import metrica.Metrica_IO as mio
-import metrica.Metrica_Viz as mviz
-import metrica.Metrica_PitchControl as mpc
-import numpy as np
-from objects.plot import Plot
+import FootballMatchAnalysis.metrica.Metrica_IO as mio
+import FootballMatchAnalysis.metrica.Metrica_Viz as mviz
+import FootballMatchAnalysis.metrica.Metrica_PitchControl as mpc
+from FootballMatchAnalysis.objects.plot import Plot
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 # Take an event and return True of event is a Key Pass

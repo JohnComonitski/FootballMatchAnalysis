@@ -1,9 +1,9 @@
-import metrica.Metrica_IO as mio
-import metrica.Metrica_Velocities as mvel
-from objects.moment import Moment
-from objects.player import Player
-from objects.ball import Ball
-from analysis.utils import *
+import FootballMatchAnalysis.metrica.Metrica_IO as mio
+import FootballMatchAnalysis.metrica.Metrica_Velocities as mvel
+from FootballMatchAnalysis.objects.moment import Moment
+from FootballMatchAnalysis.objects.player import Player
+from FootballMatchAnalysis.objects.ball import Ball
+from FootballMatchAnalysis.analysis.utils import *
 import cv2
 
 class Match:

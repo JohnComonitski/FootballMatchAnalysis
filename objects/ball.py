@@ -1,4 +1,4 @@
-from analysis.utils import *
+from FootballMatchAnalysis.analysis.utils import *
 
 class Ball:
     def __init__(self, x, y, vx, vy, speed):

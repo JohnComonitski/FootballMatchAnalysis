@@ -1,4 +1,4 @@
-from .utils import *
+from FootballMatchAnalysis.analysis.utils import *
 import numpy as np
 
 def boxes_missing(quandrant, zone):

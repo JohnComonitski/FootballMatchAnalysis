@@ -1,11 +1,11 @@
-import metrica.Metrica_IO as mio
-import metrica.Metrica_Viz as mviz
-import metrica.Metrica_PitchControl as mpc
+import FootballMatchAnalysis.metrica.Metrica_IO as mio
+import FootballMatchAnalysis.metrica.Metrica_Viz as mviz
+import FootballMatchAnalysis.metrica.Metrica_PitchControl as mpc
+from FootballMatchAnalysis.objects.plot import Plot
+from FootballMatchAnalysis.objects.player import Player
+from FootballMatchAnalysis.objects.ball import Ball
+from FootballMatchAnalysis.analysis.utils import *
 import numpy as np
-from objects.plot import Plot
-from objects.player import Player
-from objects.ball import Ball
-from analysis.utils import *
 
 class Moment:
     def __init__(self, frame, event, home, away, time, game_state):
