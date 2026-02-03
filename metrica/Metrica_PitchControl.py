@@ -325,8 +325,6 @@ def calculate_pitch_control_at_target_for_moment(moment, target, tracking_home, 
 
     return calculate_pitch_control_at_target(target, attacking_players, defending_players, ball_start_pos, params)[0]
         
-
-
 def calculate_pitch_control_at_target(target_position, attacking_players, defending_players, ball_start_pos, params):
     """ calculate_pitch_control_at_target
     
