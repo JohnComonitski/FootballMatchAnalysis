@@ -50,14 +50,14 @@ class Match:
     def players(self, team = None):
         if team == "Home":
             team = self.tracking_home.iloc[0]
-            return players_to_list(team)
+            return self.players_to_list(team)
         elif team == "Away":
             team = self.tracking_away.iloc[0]
-            return players_to_list(team)
+            return self.players_to_list(team)
         else:
             home = self.tracking_home.iloc[0]
             away = self.tracking_away.iloc[0]
-            return players_to_list(home) + players_to_list(away)
+            return self.players_to_list(home) + self.players_to_list(away)
 
     def get_event(self, frame):
         row = self.events[self.events["Start Frame"] == frame]
@@ -366,3 +366,11 @@ class Match:
             name = x_col.split("_")[1]
             players.append(Player(None, None, None, None, None, home_away, name))
         return players
+    
+    def get_player(self, name):
+        players = self.players()
+        for player in players:
+            if f"Player{player.name}" == name:
+                return player
+            
+        return None
