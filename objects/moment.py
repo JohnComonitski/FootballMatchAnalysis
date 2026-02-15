@@ -5,6 +5,8 @@ from FootballMatchAnalysis.objects.plot import Plot
 from FootballMatchAnalysis.objects.player import Player
 from FootballMatchAnalysis.objects.ball import Ball
 from FootballMatchAnalysis.analysis.utils import *
+from FootballMatchAnalysis.analysis.xg import *
+from FootballMatchAnalysis.analysis.xt import *
 import numpy as np
 
 class Moment:
@@ -105,6 +107,80 @@ class Moment:
         fig, ax = mviz.plot_pitchcontrol_for_moment( self.PPCF, field_dimen = (106.0,68), figax=figax)
         plot = Plot(fig, ax) 
         return plot
+    
+    def evaluate_passing_options(self, generate_video=False, metadata={}):
+        on_ball = self.possession()
+        team_with_ball = on_ball.team
+
+        if team_with_ball == "Home":
+            players = self.home_team()
+        elif team_with_ball == "Away":
+            players = self.away_team()
+
+        best_xt = None
+        best_pass = None
+        pass_to = None
+        best_frame = None
+
+        i = 0
+        if generate_video:
+            i = metadata["i"]
+
+        for player in players:
+            if on_ball.name != player.name:
+                pass_start = (on_ball.x, on_ball.y)
+                if is_pass_possible(self, (player.x, player.y)):
+                    for point in player.coords_in_radius():
+                        if(str(pass_start[0]) != "nan" and str(point[0]) != "nan"):
+                            if in_front_of_player(pass_start, (player.x, player.y), point):
+                                p = self.pass_probability(point)
+
+                                new_plot = None
+                                if generate_video:
+                                    new_plot = self.plot_moment()
+                                    new_plot.draw_line(pass_start, point)
+                                
+                                xt = get_xt(point)
+                                if xt is not None:
+                                    p_xt = xt * p
+                                    save_pass = False
+                                    if best_xt is None:
+                                        save_pass = True
+                                    elif(p_xt > best_xt):
+                                        save_pass = True
+
+                                    if save_pass:
+                                        best_xt = p_xt
+                                        best_pass = [ pass_start, point ]
+                                        pass_to = player
+                                        if generate_video:
+                                            best_frame = new_plot
+
+                                    if generate_video:
+                                        metadata["current_xt"] = p_xt
+                                        metadata["current_change_xt"] = p_xt - metadata["start_xt"]
+                                        if p_xt > metadata["best_xt"]:
+                                            metadata["best_xt"] = p_xt
+                                            metadata["best_change_xt"] = p_xt - metadata["start_xt"]
+
+                                        new_plot = metadata["annotate_plot"](new_plot, metadata["start_xt"], metadata["actual_xt"], metadata["best_xt"], metadata["current_xt"], metadata["best_change_xt"], metadata["current_change_xt"], metadata["frame"])
+                                        new_plot.print(f"./frames/{i}.png")
+                                        metadata["i"] = metadata["i"] + 1
+                                        i = metadata["i"]
+                                if generate_video:
+                                    new_plot.close()
+        res = {
+            "xt": best_xt,
+            "pass": best_pass,
+            "target": pass_to
+        }
+
+        if generate_video:
+            res["frame"] = best_frame
+            res["metadata"] = metadata
+
+        return res
+        
 
 def min_distances(ball, players):
     dists = []
@@ -137,3 +213,5 @@ def get_team(team):
         name = x_col.split("_")[1]
         players.append(Player(team[x_col], team[y_col], team[vx_col], team[yv_col], team[speed_col], home_away, name))
     return players
+
+

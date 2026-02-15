@@ -104,17 +104,36 @@ def get_quadrant(coords, zone, mapping):
         return 3
     else:
         return 4
-    
-def players_to_list(team):
-    x_columns = [c for c in team.keys() if c[-2:].lower()=='_x' and c!='ball_x'] # column header for player x positions
-    x_columns.sort()
 
-    home_away = "Home"
-    if(str(team.keys()[2][0:4]) == "Away"):
-            home_away = "Away"
+def is_pass_possible(moment, end):
+    if(str(end[0]) != "nan" and str(end[0]) != "nan"):
+        res = circumference_points(end, 5, .25)
+        for ps in res:
+            if (ps[0] > -53 and ps[0] < 53) and (ps[1] > -34 and ps[1] < 34):
+                p = moment.pass_probability(ps)
+                if p > .01:
+                    return 1
+    return 0
 
-    players = []
-    for x_col in x_columns:
-        name = x_col.split("_")[1]
-        players.append(Player(None, None, None, None, None, home_away, name))
-    return players
+def in_front_of_player(start, end, point):
+    x1, y1 = start
+    x2, y2 = end
+    x3, y3 = point
+
+    if x1 >= x2:
+        if x3 > x2:
+            return True
+    else:
+        if x3 <= x2:
+            return True
+
+    dx = x2 - x1
+    dy = y2 - y1
+
+    nx = dx
+    ny = dy
+
+    side_start = nx * (x1 - x2) + ny * (y1 - y2)
+    side_point = nx * (x3 - x2) + ny * (y3 - y2)
+
+    return side_start * side_point > 0

@@ -352,3 +352,17 @@ class Match:
             raise ValueError("Multiple matching rows found")
 
         return idx[0]
+    
+    def players_to_list(self, team):
+        x_columns = [c for c in team.keys() if c[-2:].lower()=='_x' and c!='ball_x'] # column header for player x positions
+        x_columns.sort()
+
+        home_away = "Home"
+        if(str(team.keys()[2][0:4]) == "Away"):
+                home_away = "Away"
+
+        players = []
+        for x_col in x_columns:
+            name = x_col.split("_")[1]
+            players.append(Player(None, None, None, None, None, home_away, name))
+        return players
