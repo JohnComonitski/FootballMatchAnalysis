@@ -29,7 +29,7 @@ def previous_pass(match, event):
     if event["Type"] != "PASS":
         return None
 
-    idx = match.get_event_index(event)
+    
     while True:
         idx -= 1
         if 0 <= idx < len(match.events):
@@ -39,6 +39,23 @@ def previous_pass(match, event):
                 if prev_event["To"] == event["From"]:
                     return prev_event
             else:
+                return None
+        else:
+            return None
+        
+# For a given passing event, returns the previous pass
+def next_pass(match, event):
+    if event["Type"] != "PASS":
+        return None
+
+    idx = match.get_event_index(event)
+    while True:
+        idx +=1
+        if 0 <= idx < len(match.events):
+            event = match.events.iloc[idx]
+            if event["Type"] == "PASS":
+                return event
+            if event["Type"] in [ "SHOT", "BALL LOST", "BALL OUT" "CARD" "SET PIECE", "FAULT RECEIVED" ]:
                 return None
         else:
             return None
@@ -58,3 +75,17 @@ def get_shot(match, event):
                 return None
         else:
             return None
+
+def is_one_two(match, event):
+    if event["Type"] != "PASS":
+        return False
+
+    from_player = event["From"]
+
+    next_p = next_pass(match, event)
+    if next_p is not None:
+        if from_player == next_p["To"]:
+            return True
+
+    return False
+
