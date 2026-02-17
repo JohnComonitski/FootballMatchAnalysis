@@ -7766,6 +7766,16 @@ def get_xg(coords, invert = False):
     for box in boxes:
         corners.append( { "value" : box["value"],  "point" : get_center(box["box"])} )
 
+    #Check if math isn't needed
+    all_same_value = True
+    corner_one_value = corners[0]["value"]
+    for corner in corners:
+        if corner["value"] != corner_one_value:
+            all_same_value = False
+
+    if all_same_value:
+        return float(corner_one_value)
+
     pts = [(float(d['value']), d['point'][0], d['point'][1]) for d in corners]
 
     xs = [p[1] for p in pts]
