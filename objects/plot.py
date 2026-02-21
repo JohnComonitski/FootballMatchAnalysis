@@ -44,8 +44,8 @@ class Plot:
         self.ax.plot([p1[0], p2[0]], [p1[1], p2[1]], color=c, linewidth=1, alpha=alpha)
 
     def draw_circle(self, x, y, r, c="#000000", alpha=1):
-        circle = plt.Circle((x, y), r, fill=False)
-        self.ax.add_patch(circle, alpha=alpha)
+        circle = plt.Circle((x, y), r, fill=False, alpha=alpha)
+        self.ax.add_patch(circle)
         self.ax.set_aspect('equal', 'box')
 
     def draw_path(self, path, c="#000000", alpha=1):

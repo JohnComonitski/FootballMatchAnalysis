@@ -132,43 +132,45 @@ class Moment:
                 if is_pass_possible(self, (player.x, player.y)):
                     for point in player.coords_in_radius():
                         if(str(pass_start[0]) != "nan" and str(point[0]) != "nan"):
-                            if in_front_of_player(pass_start, (player.x, player.y), point):
-                                p = self.pass_probability(point)
+                            if on_ball.in_peripheral_vision(player.x, player.y):
+                                if in_front_of_player(pass_start, (player.x, player.y), point):
+                                    p = self.pass_probability(point)
 
-                                new_plot = None
-                                if generate_video:
-                                    new_plot = self.plot_moment()
-                                    new_plot.draw_line(pass_start, point)
-                                
-                                xt = get_xt(point)
-                                if xt is not None:
-                                    p_xt = xt * p
-                                    save_pass = False
-                                    if best_xt is None:
-                                        save_pass = True
-                                    elif(p_xt > best_xt):
-                                        save_pass = True
-
-                                    if save_pass:
-                                        best_xt = p_xt
-                                        best_pass = [ pass_start, point ]
-                                        pass_to = player
-                                        if generate_video:
-                                            best_frame = new_plot
-
+                                    new_plot = None
                                     if generate_video:
-                                        metadata["current_xt"] = p_xt
-                                        metadata["current_change_xt"] = p_xt - metadata["start_xt"]
-                                        if p_xt > metadata["best_xt"]:
-                                            metadata["best_xt"] = p_xt
-                                            metadata["best_change_xt"] = p_xt - metadata["start_xt"]
+                                        new_plot = self.plot_moment(include_player_velocities=True)
+                                        new_plot.draw_line(pass_start, point)
+                                    
+                                    xt = get_xt(point)
+                                    if xt is not None:
+                                        p_xt = xt * p
+                                        save_pass = False
+                                        if best_xt is None:
+                                            save_pass = True
+                                        elif(p_xt > best_xt):
+                                            save_pass = True
 
-                                        new_plot = metadata["annotate_plot"](new_plot, metadata["start_xt"], metadata["actual_xt"], metadata["best_xt"], metadata["current_xt"], metadata["best_change_xt"], metadata["current_change_xt"], metadata["frame"])
-                                        new_plot.print(f"./frames/{i}.png")
-                                        metadata["i"] = metadata["i"] + 1
-                                        i = metadata["i"]
-                                if generate_video:
-                                    new_plot.close()
+
+                                        if save_pass:
+                                            best_xt = p_xt
+                                            best_pass = [ pass_start, point ]
+                                            pass_to = player
+                                            if generate_video:
+                                                best_frame = new_plot
+
+                                        if generate_video:
+                                            metadata["current_xt"] = p_xt
+                                            metadata["current_change_xt"] = p_xt - metadata["start_xt"]
+                                            if p_xt > metadata["best_xt"]:
+                                                metadata["best_xt"] = p_xt
+                                                metadata["best_change_xt"] = p_xt - metadata["start_xt"]
+
+                                            new_plot = metadata["annotate_plot"](new_plot, metadata["start_xt"], metadata["actual_xt"], metadata["best_xt"], metadata["current_xt"], metadata["best_change_xt"], metadata["current_change_xt"], metadata["frame"])
+                                            new_plot.print(f"./frames/{i}.png")
+                                            metadata["i"] = metadata["i"] + 1
+                                            i = metadata["i"]
+                                    if generate_video:
+                                        new_plot.close()
         res = {
             "xt": best_xt,
             "pass": best_pass,
@@ -180,7 +182,6 @@ class Moment:
             res["metadata"] = metadata
 
         return res
-        
 
 def min_distances(ball, players):
     dists = []

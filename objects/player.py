@@ -1,4 +1,5 @@
 from FootballMatchAnalysis.analysis.utils import *
+import math
 
 class Player:
     def __init__(self, x, y, vx, vy, speed, team, name=""):
@@ -42,3 +43,16 @@ class Player:
             "name" : self.name,
             "team" : self.team
         }
+    
+
+    # Return True if point is in player's peripheralvision
+    def in_peripheral_vision(self, point_x, point_y):
+        if self.vx == 0 and self.vy == 0:
+            return False
+        
+        dx = point_x - self.x
+        dy = point_y - self.y
+        
+        dot = self.vx * dx + self.vy * dy
+        
+        return dot >= 0
