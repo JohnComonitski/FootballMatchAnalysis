@@ -23,6 +23,7 @@ class Plot:
 
     def write(self, text, x, y, font_size=12, c="#000000", justifification = 'center'):
         self.ax.text( x, y, text, ha=justifification, va='center', fontsize=font_size, color=c)
+        return self.fig
 
     def print(self, name=None):
         if not name:
@@ -31,6 +32,7 @@ class Plot:
 
     def draw_point(self, x, y, c="#000000", s=5, alpha=1):
         self.ax.scatter(x, y, s=s, color=c, alpha=alpha)
+        return self.fig
 
     def draw_box(self, rect, c="#000000", alpha=1):
         tl, tr, bl, br = rect
@@ -39,19 +41,23 @@ class Plot:
         self.ax.plot([tr[0], br[0]], [tr[1], br[1]], color=c, linewidth=2, alpha=alpha)
         self.ax.plot([br[0], bl[0]], [br[1], bl[1]], color=c, linewidth=2, alpha=alpha)
         self.ax.plot([bl[0], tl[0]], [bl[1], tl[1]], color=c, linewidth=2, alpha=alpha)
+        return self.fig
 
     def draw_line(self, p1, p2, c="#000000", alpha=1):
         self.ax.plot([p1[0], p2[0]], [p1[1], p2[1]], color=c, linewidth=1, alpha=alpha)
+        return self.fig
 
     def draw_circle(self, x, y, r, c="#000000", alpha=1):
         circle = plt.Circle((x, y), r, fill=False, alpha=alpha)
         self.ax.add_patch(circle)
         self.ax.set_aspect('equal', 'box')
+        return self.fig
 
     def draw_path(self, path, c="#000000", alpha=1):
         for i in range(0, len(path)):
             if str(path[i][0]) != "nan":
                 self.draw_point(path[i][0], path[i][1], c, s=1, alpha=alpha)
+        return self.fig
 
     def draw_heat_map(self, path):
         path = [
@@ -79,6 +85,7 @@ class Plot:
         self.ax.set_xticklabels([])
         self.ax.set_yticklabels([])
         self.ax.set_frame_on(False)
+        return self.fig
 
     def draw_xt(self, invert=False):
         zones = xt_map_zones()
@@ -95,6 +102,7 @@ class Plot:
             x = zone[0][0] - ((zone[0][0] - zone[2][0]) / 2 )
             y = zone[0][1] - ((zone[0][1] - zone[1][1]) / 2 )
             self.write(xt, x=x, y=y, c="#000000")
+        return self.fig
 
     def draw_xg(self, invert=False):
         zones = xg_map_zones()
@@ -111,6 +119,7 @@ class Plot:
             x = zone[0][0] - ((zone[0][0] - zone[2][0]) / 2 )
             y = zone[0][1] - ((zone[0][1] - zone[1][1]) / 2 )
             self.write(xg, x=x, y=y, c="#000000")
+        return self.fig
 
     def cv2_image(self):
         canvas = FigureCanvas(self.fig)
@@ -135,3 +144,4 @@ class Plot:
         fig,ax = mviz.plot_event(frame=event, figax=figax, indicators=indicator, annotate=False, alpha = alpha, field_dimen = self.field_dimen, color = c )
         self.fig = fig
         self.ax = ax
+        return self.fig
