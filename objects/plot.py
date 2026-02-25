@@ -48,7 +48,7 @@ class Plot:
         return self.fig
 
     def draw_circle(self, x, y, r, c="#000000", alpha=1):
-        circle = plt.Circle((x, y), r, fill=False, alpha=alpha)
+        circle = plt.Circle((x, y), r, fill=False, alpha=alpha, color=c)
         self.ax.add_patch(circle)
         self.ax.set_aspect('equal', 'box')
         return self.fig

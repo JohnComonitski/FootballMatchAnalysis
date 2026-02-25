@@ -2,6 +2,7 @@ import FootballMatchAnalysis.metrica.Metrica_IO as mio
 import FootballMatchAnalysis.metrica.Metrica_Viz as mviz
 import FootballMatchAnalysis.metrica.Metrica_PitchControl as mpc
 from FootballMatchAnalysis.objects.plot import Plot
+from FootballMatchAnalysis.analysis.utils import *
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -88,4 +89,98 @@ def is_one_two(match, event):
             return True
 
     return False
+
+def get_players_packed(match, event, relevance_distance=25):
+    if event["Type"] != "PASS":
+        return []
+    
+    before = match.get_moment(event["Start Frame"])
+    after = match.get_moment(event["End Frame"])
+    
+    team_on_ball = before.possession(threshold=100).team
+    players_off_ball = before.home_team()
+    if team_on_ball == "Home":
+        players_off_ball = before.away_team()
+
+    #Make Sure Ball makes forward progress
+    start_x = event["Start X"]
+    end_x = event["End X"]
+    dif = end_x - start_x
+    if team_on_ball == "Away" and dif > 0:
+        return []
+    elif team_on_ball == "Home" and dif < 0:
+        return []
+
+    # Who is behind the ball before pass
+    ball_x = before.ball.x
+    behind_the_ball_before = []
+    for player in players_off_ball:
+        loc = player.x
+        if str(loc) != "nan":
+            if team_on_ball == "Home":
+                if player.x < ball_x:
+                    behind_the_ball_before.append(player)
+            elif team_on_ball == "Away":
+                if player.x > ball_x:
+                    behind_the_ball_before.append(player)
+
+    # Who is behind the ball after pass
+    players_off_ball = after.home_team()
+    if team_on_ball == "Home":
+        players_off_ball = after.away_team()
+        
+    ball_x = after.ball.x
+    behind_the_ball_after = []
+    for player in players_off_ball:
+        loc = player.x
+        if str(loc) != "nan":
+            if team_on_ball == "Home":
+                if player.x < ball_x:
+                    behind_the_ball_after.append(player)
+            elif team_on_ball == "Away":
+                if player.x > ball_x:
+                    behind_the_ball_after.append(player)
+
+    #Ignore player's too far away
+    final_before_list = []
+    final_before_list_names = []
+    for p in behind_the_ball_before:
+        dist = distance((p.x, p.y), (after.ball.x, after.ball.y))
+        if dist < relevance_distance:
+            final_before_list.append(p)
+            final_before_list_names.append(p.name)
+    
+    final_after_list = []
+    for p in behind_the_ball_after:
+        if p.name not in final_before_list_names:
+            dist = distance((p.x, p.y), (after.ball.x, after.ball.y))
+            if dist < relevance_distance:
+                final_after_list.append(p)
+
+    return final_after_list
+
+def players_packed(match, event, relevance_distance=25):
+    return len(get_players_packed(match, event, relevance_distance))
+
+def events_by_player(match, player, type=None, subtype=None, to=None ):
+    if type is None:
+        return None
+
+    events = match.events
+    if type not in match.event_types():
+        return None
+    
+    events = events[events["Type"] == type]
+    if subtype:
+        if subtype not in match.subevent_types(type):
+            return None
+        events = events[events["Subtype"] == subtype]
+
+    if type in ["PASS", "BALL LOST"]:
+        events = events[events["From"] == f"Player{player.name}"]
+        if to:
+            events = events[events["To"] == f"Player{player.name}"]
+    
+    return events
+
 
