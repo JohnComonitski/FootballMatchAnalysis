@@ -15,14 +15,18 @@ class Match:
         events = mio.read_event_data(DATADIR,game_id)
         tracking_home = mio.tracking_data(DATADIR,game_id, 'Home')
         tracking_away = mio.tracking_data(DATADIR,game_id, 'Away')
-        tracking_home = mio.to_metric_coordinates(tracking_home)
-        tracking_away = mio.to_metric_coordinates(tracking_away)
+        if tracking_home is not None:
+            tracking_home = mio.to_metric_coordinates(tracking_home)
+        if tracking_away is not None:
+            tracking_away = mio.to_metric_coordinates(tracking_away)
         events = mio.to_metric_coordinates(events)
         tracking_home,tracking_away,events = mio.to_single_playing_direction(tracking_home,tracking_away,events)
         
         # Calculate Player Velocities
-        tracking_home = mvel.calc_player_velocities(tracking_home,smoothing=True)
-        tracking_away = mvel.calc_player_velocities(tracking_away,smoothing=True)
+        if tracking_home is not None:
+            tracking_home = mvel.calc_player_velocities(tracking_home,smoothing=True)
+        if tracking_away is not None:
+            tracking_away = mvel.calc_player_velocities(tracking_away,smoothing=True)
 
         self.events = events
         self.tracking_home = tracking_home
@@ -79,18 +83,22 @@ class Match:
             event =  event.iloc[0]
 
         home = self.tracking_home
-        home_players = home[home["Time [s]"] == round(frame*0.04, 2)]
-        if home_players.empty:
-            home_players =  None
-        else:
-            home_players =  home_players.iloc[0]
+        home_players = None
+        if home is not None:
+            home_players = home[home["Time [s]"] == round(frame*0.04, 2)]
+            if home_players.empty:
+                home_players =  None
+            else:
+                home_players =  home_players.iloc[0]
 
         away = self.tracking_away
-        away_players = away[away["Time [s]"] == round(frame*0.04, 2)]
-        if away_players.empty:
-            away_players =  None
-        else:
-            away_players =  away_players.iloc[0]
+        away_players = None
+        if away is not None:
+            away_players = away[away["Time [s]"] == round(frame*0.04, 2)]
+            if away_players.empty:
+                away_players =  None
+            else:
+                away_players =  away_players.iloc[0]
 
         return Moment(frame, event, home_players, away_players, time, state)
     

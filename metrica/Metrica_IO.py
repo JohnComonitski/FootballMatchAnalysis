@@ -41,10 +41,14 @@ def tracking_data(DATADIR,game_id,teamname):
     '''
     teamfile = '/Sample_Game_%d/Sample_Game_%d_RawTrackingData_%s_Team.csv' % (game_id,game_id,teamname)
     # First:  deal with file headers so that we can get the player names correct
-    csvfile =  open('{}/{}'.format(DATADIR, teamfile), 'r') # create a csv file reader
+    try:
+        csvfile =  open('{}/{}'.format(DATADIR, teamfile), 'r') # create a csv file reader
+    except:
+        return None
+
     reader = csv.reader(csvfile) 
     teamnamefull = next(reader)[3].lower()
-    print("Reading team: %s" % teamnamefull)
+    #print("Reading team: %s" % teamnamefull)
     # construct column names
     jerseys = [x for x in next(reader) if x != ''] # extract player jersey numbers from second row
     columns = next(reader)
@@ -89,10 +93,16 @@ def to_single_playing_direction(home,away,events):
     '''
     Flip coordinates in second half so that each team always shoots in the same direction through the match.
     '''
-    for team in [home,away,events]:
-        second_half_idx = team.Period.eq(2).idxmax()
-        columns = [c for c in team.columns if c[-1].lower() in ['x','y']]
-        team.loc[second_half_idx:,columns] *= -1
+    if home is not None and away is not None:
+        for team in [home,away,events]:
+            second_half_idx = team.Period.eq(2).idxmax()
+            columns = [c for c in team.columns if c[-1].lower() in ['x','y']]
+            team.loc[second_half_idx:,columns] *= -1
+    else:
+        for team in [events]:
+            second_half_idx = team.Period.eq(2).idxmax()
+            columns = [c for c in team.columns if c[-1].lower() in ['x','y']]
+            team.loc[second_half_idx:,columns] *= -1   
     return home,away,events
 
 def find_playing_direction(team,teamname):

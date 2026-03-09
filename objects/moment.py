@@ -18,7 +18,9 @@ class Moment:
         self.PPCF = None
         self.time = time
         self. game_state = game_state
-        self.ball = Ball(self.home["ball_x"], self.home["ball_y"], None, None, None)
+        self.ball = None
+        if home is not None:
+            self.ball = Ball(self.home["ball_x"], self.home["ball_y"], None, None, None)
 
     def plot_moment(self, c='k', plot=None, annotate=True, team_colors=('r','b'), field_dimen = (106.0,68.0), include_player_velocities=False, PlayerMarkerSize=10, PlayerAlpha=0.7 ):
         figax = None
