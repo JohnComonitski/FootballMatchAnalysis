@@ -10,6 +10,7 @@ A Python library that utilizes object-oriented design principles to simplify the
   - [Getting Started](#getting-started)
   - [Data Sources](#data-sources)
   - [Tutorials](#tutorials)
+  - [Objects] (#objects)
   - [Examples](#examples)
   - [Resources](#resources)
   - [Licenses](#licenses)
