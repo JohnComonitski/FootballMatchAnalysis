@@ -87,12 +87,12 @@ A Python library that utilizes object-oriented design principles to simplify the
 To hit the ground running with the FMA Library, I've created a series of [Jupyter Notebooks](https://github.com/JohnComonitski/FMATutorials) that can be worked through to better understand the fundementals of working with the Pandas Dataframes, Event Data, Tracking Data and other advance match analysis topics.
 
 ## Objects
-The FMA Library uses an object oriented design to simplify match analysis. These are the objects you'll be working with...
-- 🥅 **Match:** The Match object holds the event & tracking data and includes a number of functions to make accessing events, players and the ball for any given moment simple .
-- ⏱️ **Moment:** A Moment represents a given frame during the match and will include helper methods to assist in analyzing moments in a match as well as quick access to the every player and the balls location and velocity during that given frame.
-- 🏃 **Player:** A Player object is represents a player during a given moment in time.
-- ⚽ **Ball:** A Ball object is represents a player during a given moment in time.
-- 🎨 **Plot:** A Plot is simply a Matplotlib plot of a football pitch, which can be annotated or passed to other objects to visualizes key moments during a match.
+The FMA Library employs an object-oriented design to simplify match analysis. These are the objects you'll be working with...
+- 🥅 **Match:** The Match object holds the event & tracking data and includes a number of functions to make accessing events, players and the ball for any given moment simple.
+- ⏱️ **Moment:** A Moment represents a given frame during the match and will include helper methods to assist in analyzing moments in a match, as well as quick access to every player and the ball's location and velocity during that given frame.
+- 🏃 **Player:** A Player object represents a player during a given moment in time.
+- ⚽ **Ball:** A Ball object represents a player during a given moment in time.
+- 🎨 **Plot:** A Plot is simply a Matplotlib plot of a football pitch, which can be annotated or passed to other objects to visualize key moments during a match.
 
 ## Examples
 ### Get All Events Types That Happen in a Match
