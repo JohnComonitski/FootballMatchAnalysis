@@ -31,13 +31,7 @@ A Python library that utilizes object-oriented design principles to simplify the
    git clone https://github.com/JohnComonitski/FootballMatchAnalysis.git
    ```
 
-2. Move to the project directory
-
-   ```shell
-   cd FootballMatchAnalysis
-   ```
-
-3. Create a data directory
+2. Create a data directory
 
    ```shell
    mkdir data
@@ -45,7 +39,7 @@ A Python library that utilizes object-oriented design principles to simplify the
   > [!NOTE]
   > This is where you will be storing your tracking data and event data.
 
-4. Download an EPV Grid
+3. Download an EPV Grid
    Download Friends of Tracking's [EPV_grid.csv](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking/blob/master/EPV_grid.csv) and copy it to your data directory
     ```shell
    cp EPV_grid.csv ./data/EPV_grid.csv
@@ -53,7 +47,7 @@ A Python library that utilizes object-oriented design principles to simplify the
   > [!NOTE]
   > This will only be needed if you intend to do Expected Point Value analysis.
 
-5. Create and activate a Python
+4. Create and activate a Python
    [virtual environment](https://docs.python.org/3/library/venv.html#creating-virtual-environments).
    On GNU/Linux systems this is as easy as:
 
@@ -63,13 +57,13 @@ A Python library that utilizes object-oriented design principles to simplify the
    # Work inside the environment.
    ```
 
-6. Install the Python dependencies
+5. Install the Python dependencies
 
    ```shell
    pip install -r requirements.txt
    ```
 
-7. In your Python script, import the Match object
+6. In your Python script, import the Match object
 
     ```python
     from events.match import Match
