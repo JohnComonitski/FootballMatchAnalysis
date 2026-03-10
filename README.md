@@ -1,6 +1,6 @@
 # Football Match Analysis
 
-A Python library that builds on Friend's of Tracking's [Metrica Tracking Data Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) and creates easy-to-use wrapper functions for many of the match analysis examples in Friend's of Tracking's [Tracking Data Tutorial Series](https://www.youtube.com/watch?v=8TrleFklEsE). Additionally, this library includes a new Match object which makes the extraction & analysis of key match moments as simple as a few lines of Python.
+A Python library that utilizes object-oriented design principles to simplify the analysis and exploration of footballing event & tracking data. This library is built upon Friend's of Tracking's [Metrica Tracking Data Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) and from their work generates easy-to-use wrapper objects such as Match, Moment, Player, Ball and Plot, which makes the extraction, analysis and visualization of key match moments as simple as a few lines of Python.
 
 ### Table of Contents
 <!--TOC-->
@@ -15,12 +15,13 @@ A Python library that builds on Friend's of Tracking's [Metrica Tracking Data Li
 
 
 ## Features
-- ⚽ Reduces friction when working on match analysis
-- 📊 Aggregate match events for player and opposition analysis
-- 🗺️ Plot every event in a match
-- 🔑 Quickly visualize key moments in a match
+- ⚽ Reduces friction when working with event & tracking data
+- 📊 Aggregate match events for player and oppositional analysis
+- 🗺️ Generate plots to visualizaize key moments in a match
 - 🔎 Identify how player movement impacted key moments in a match
-- 🏃 Calculate the physical statistics for all players on the pitch
+- 🤼 Explore pitch control for any moment in a match
+- 🥅 Implementation of simplified xG and xT model
+- 🏃 Calculate physical statistics for all players on the pitch
 
 ## Getting Started
 
@@ -68,11 +69,9 @@ A Python library that builds on Friend's of Tracking's [Metrica Tracking Data Li
    pip install -r requirements.txt
    ```
 
-7. In your Python script, import the supporting libraries
+7. In your Python script, import the Match object
 
     ```python
-    from analysis.event import *
-    from analysis.player import *
     from events.match import Match
     ```
 
