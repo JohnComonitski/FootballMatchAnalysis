@@ -9,9 +9,10 @@ A Python library that utilizes object-oriented design principles to simplify the
   - [Features](#features)
   - [Getting Started](#getting-started)
   - [Data Sources](#data-sources)
+  - [Tutorials](#tutorials)
   - [Examples](#examples)
   - [Resources](#resources)
-  - [Licenses](#license)
+  - [Licenses](#licenses)
 
 
 ## Features
@@ -82,6 +83,8 @@ A Python library that utilizes object-oriented design principles to simplify the
   >      📄 MATCH_ID_RawTrackingData_Home_Team.csv
   > ```
 
+## Tutorials
+To hit the ground running with the Football Match Analysis Library, I've created a series of [Jupyter Notebooks](https://github.com/JohnComonitski/FMATutorials) that can be worked through to better understand the fundementals of working with the Pandas Dataframes, Event Data, Tracking Data and other advance match analysis topics.
 
 ## Examples
 ### Get All Events Types That Happen in a Match
@@ -98,7 +101,7 @@ match = Match(DATADIR, game_id)
 match.event_types()
 ```
 
-### Get All Moments an Event Occoured
+### Get All Instances of a Given an Event Type
 Get a list of moments when a specific event occurred in the match.
 
 ```python
@@ -112,8 +115,8 @@ match = Match(DATADIR, game_id)
 match.get_events("PASS")
 ```
 
-### Plot the Events and Locations of Players Moments Before a Goal
-Plot the location of every player on the field the moment before the first goal and plot the passes that led up to the goal.
+### Plot the Events and Locations of Players the Moment Before a Goal
+Plot the location of every player on the field the moment before the first goal..
 
 ```python
 from analysis.player import *
@@ -125,9 +128,10 @@ game_id = 2
 
 match = Match(DATADIR, game_id)
 goals = match.goals()
-goal_frame = goals.iloc[1].name
+goal_frame = goals.iloc[0]["Start Frame"]
 
-plot_goal(match, goal_frame)
+moment = match.get_moment(goal_frame)
+moment.plot_moment()
 ```
 
 ![goal](./examples/goal.png)
@@ -146,29 +150,14 @@ game_id = 2
 match = Match(DATADIR, game_id)
 frame = 100
 
-plot_pitch_control(match, frame)
+moment = match.get_moment(frame)
+moment.plot_pitch_control()
 ``` 
 
 ![pitch control](./examples/pitch_control.png)
 
-### Calculate Distance Traveled by Each Player
-Calculate the distance traveled in kilometers by every player in the match.
-
-```python
-from analysis.player import *
-from events.match import Match
-
-# Load Event Data
-DATADIR = './data'
-game_id = 2
-
-match = Match(DATADIR, game_id)
-track_distance_covered(match)
-```
-
-![distance](./examples/distance.png)
-
 ## Resources
+ - [Football Match Analysis Library Tutorials](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) - Jupyter Notebooks to help better understand the fundementals of working with the Pandas Dataframes, Event Data, Tracking Data and other advance match analysis topics using the FMA library.
  - [Friends of Tracking](https://www.youtube.com/@friendsoftracking755) - The best resource on the internet for advanced football analysis and data science. This library stands on the shoulders of their great work!
  - [Introduction to Football Analysis with Tracking Data in Python](https://www.youtube.com/watch?v=8TrleFklEsE) - Learn the fundamentals of working with tracking data. Much of what you learn & use in this tutorial is the backbone of this library.
  - [Metrica Analysis Library](https://github.com/Friends-of-Tracking-Data-FoTD/LaurieOnTracking) - Python library for easily working with Metrica tracking & event data. This library would not be possilbe without this library.
