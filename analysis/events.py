@@ -30,7 +30,7 @@ def previous_pass(match, event):
     if event["Type"] != "PASS":
         return None
 
-    
+    idx = match.get_event_index(event)
     while True:
         idx -= 1
         if 0 <= idx < len(match.events):
