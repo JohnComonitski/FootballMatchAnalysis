@@ -7759,7 +7759,10 @@ def get_xg(coords, invert = False):
     
     if( y < -34 or y > 34 ):
         return 0
-
+    
+    if str(x) == "nan" or str(y) == "nan":
+        return 0
+    
     boxes = get_four_boxes(coords)
 
     corners = []

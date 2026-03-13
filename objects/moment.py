@@ -83,6 +83,9 @@ class Moment:
         self.PPCF,xgrid,ygrid = mpc.generate_pitch_control_for_moment(self, tracking_home, tracking_away, params, GK_numbers, field_dimen = (106.,68.,), n_grid_cells_x = 107)
 
     def pass_probability(self, target):
+        if str(target[0]) == "nan" or str(target[1]) == "nan":
+            return 0
+    
         tracking_home = self.home.to_frame().T
         tracking_home.index.name = "Frame"
         tracking_home.reset_index(inplace=True)
