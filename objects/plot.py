@@ -118,7 +118,7 @@ class Plot:
             xg = zone_to_xg(zone_id)
             x = zone[0][0] - ((zone[0][0] - zone[2][0]) / 2 )
             y = zone[0][1] - ((zone[0][1] - zone[1][1]) / 2 )
-            self.write(xg, x=x, y=y, c="#000000")
+            self.write(xg, x=x, y=y, c="#000000", font_size= 8)
         return self.fig
 
     def cv2_image(self):
