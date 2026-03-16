@@ -25,6 +25,16 @@ def is_key_pass(match, event):
         else:
             return False
 
+# For a given event, returns the previous event
+def previous_event(match, event):
+    idx = match.get_event_index(event)
+    return match.events.iloc[idx-1]
+
+# For a given event, returns the next event
+def next_event(match, event):
+    idx = match.get_event_index(event)
+    return match.events.iloc[idx+1]
+
 # For a given passing event, returns the previous pass
 def previous_pass(match, event):
     if event["Type"] != "PASS":
