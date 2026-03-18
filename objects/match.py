@@ -361,6 +361,18 @@ class Match:
 
         return idx[0]
     
+    def get_events_frame(self, frame):
+        events = self.events
+        return events[ ( events["Start Frame"] == frame ) | ( events["End Frame"] == frame ) ]
+
+    def get_events_startframe(self, frame):
+        events = self.events
+        return events[ ( events["Start Frame"] == frame ) ]
+
+    def get_events_endframe(self, frame):
+        events = self.events
+        return events[ ( events["End Frame"] == frame )]
+     
     def players_to_list(self, team):
         x_columns = [c for c in team.keys() if c[-2:].lower()=='_x' and c!='ball_x'] # column header for player x positions
         x_columns.sort()
