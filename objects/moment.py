@@ -98,7 +98,6 @@ class Moment:
         params = mpc.default_model_params()
 
         GK_numbers = [mio.find_goalkeeper(tracking_home),mio.find_goalkeeper(tracking_away)]
-
         return mpc.calculate_pitch_control_at_target_for_moment(self, target, tracking_home, tracking_away, params, GK_numbers)
 
     def plot_pitch_control(self, plot):
@@ -114,7 +113,7 @@ class Moment:
         return plot
     
     def evaluate_passing_options(self, generate_video=False, metadata={}):
-        on_ball = self.possession()
+        on_ball = self.possession(threshold=100)
         team_with_ball = on_ball.team
 
         if team_with_ball == "Home":

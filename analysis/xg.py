@@ -7743,10 +7743,13 @@ def get_zone(coords):
     for zone in zones:
         rect = zones[zone]
         if x > rect[0][0] and x <= rect[2][0]:
-            if y > rect[1][1] and y <= rect[0][1]:
+            if y >= rect[1][1] and y <= rect[0][1]:
                 return zone
 
 def get_xg(coords, invert = False):
+    if( str(coords[0]) == "nan" or str(coords[0]) == "nan" ):
+        return 0
+    
     x, y = coords
 
     if invert:

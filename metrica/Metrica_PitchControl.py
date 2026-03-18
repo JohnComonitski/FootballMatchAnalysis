@@ -273,7 +273,7 @@ def generate_pitch_control_for_event(event_id, events, tracking_home, tracking_a
 def generate_pitch_control_for_moment(moment, tracking_home, tracking_away, params, GK_numbers, field_dimen = (106.,68.,), n_grid_cells_x = 50, offsides=True):
     # get the details of the event (frame, team in possession, ball_start_position)
     ball = (moment.ball.x, moment.ball.y)
-    pass_team = moment.possession().team
+    pass_team = moment.possession(threshold=100).team
     ball_start_pos = np.array([ball[0], ball[1]])
     # break the pitch down into a grid
     n_grid_cells_y = math.ceil(n_grid_cells_x*field_dimen[1]/field_dimen[0])
@@ -309,7 +309,7 @@ def generate_pitch_control_for_moment(moment, tracking_home, tracking_away, para
 
 def calculate_pitch_control_at_target_for_moment(moment, target, tracking_home, tracking_away, params, GK_numbers, field_dimen = (106.,68.,), n_grid_cells_x = 50, offsides=True):
     ball = (moment.ball.x, moment.ball.y)
-    pass_team = moment.possession().team
+    pass_team = moment.possession(threshold=100).team
     ball_start_pos = np.array([ball[0], ball[1]])
     target = np.array([target[0], target[1]])
 

@@ -485,7 +485,7 @@ def zone_to_xt(zone):
         "183" : ".024",
         "184" : ".031",
         "185" : ".071",
-        "186" : ".332",
+        "186" : ".32",
         "187" : ".32",
         "188" : ".085",
         "189" : ".033",
@@ -503,10 +503,13 @@ def get_zone(coords):
     for zone in zones:
         rect = zones[zone]
         if x > rect[0][0] and x <= rect[2][0]:
-            if y > rect[1][1] and y <= rect[0][1]:
+            if y >= rect[1][1] and y <= rect[0][1]:
                 return zone
 
 def get_xt(coords, invert = False):
+    if( str(coords[0]) == "nan" or str(coords[0]) == "nan" ):
+        return 0
+    
     x, y = coords
     if invert:
         x *= -1
