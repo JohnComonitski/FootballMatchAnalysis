@@ -176,6 +176,8 @@ class Match:
 
     def get_time_on_ball(self, start=None, end=None, return_res=None):
         skip_events = [ "CHALLENGE", "SET PIECE", "CARD" ]
+        if start is None:
+            start = 0
 
         possessions = []
         last_possession = {
@@ -191,12 +193,22 @@ class Match:
             "Player" : None,
         }
 
+        
         events = self.events
         if start and end:
             events = self.events.loc[start:end]
+            event = events.loc[start]
+            current_possession["Team"] = event["Team"]
+            current_possession["Player"] = event["From"]
+            current_possession["StartFrame"] = event["Start Frame"]
+        else:
+            event = events.loc[1]
+            current_possession["Team"] = event["Team"]
+            current_possession["Player"] = event["From"]
+            current_possession["StartFrame"] = event["Start Frame"]
 
         for i, event in events.iterrows():
-            if current_possession["StartFrame"] is None and ( event["Type"] not in skip_events ) and ( event["Type"] not in ["BALL LOST", "BALL OUT"] ):
+            if current_possession["StartFrame"] is None and ( event["Type"] not in skip_events ) and ( event["Type"] not in ["BALL LOST", "BALL OUT", "PASS"] ):
                 current_possession["Team"] = event["Team"]
                 current_possession["Player"] = event["From"]
                 current_possession["StartFrame"] = event["Start Frame"]
@@ -208,9 +220,11 @@ class Match:
                     current_possession["StartFrame"] = event["Start Frame"] 
 
                 if event["Type"] == "PASS":
-                    last_event = events.iloc[i-1]
-                    if last_event["Type"] == "SET PIECE" or event["Subtype"] == "GOAL KICK":
-                        current_possession["StartFrame"] = event["Start Frame"]
+
+                    if i-1 in events.index:
+                        last_event = events.loc[i-1]
+                        if last_event["Type"] == "SET PIECE" or event["Subtype"] == "GOAL KICK":
+                            current_possession["StartFrame"] = event["Start Frame"]
                     
                     #Possesion of pass giver
                     current_possession["Team"] = event["Team"]
@@ -225,41 +239,56 @@ class Match:
                     current_possession["Player"] = event["To"]
                     current_possession["StartFrame"] = event["End Frame"]
                 elif event["Type"] == "BALL LOST":
-                    last_event = events.iloc[i-1]
-                    if event["Subtype"] == "END HALF":
-                        #Half is Over
-                        current_possession["EndFrame"] = event["Start Frame"]
-                        last_possession = current_possession.copy()
-                        possessions.append(last_possession)
+                    if i-1 in events.index:
+                        last_event = events.loc[i-1]
+                        if event["Subtype"] == "END HALF":
+                            #Half is Over
+                            current_possession["EndFrame"] = event["Start Frame"]
+                            last_possession = current_possession.copy()
+                            possessions.append(last_possession)
 
-                        #Kick Start new ball sequence
-                        current_possession = {
-                            "StartFrame" : None,
-                            "EndFrame" : None,
-                            "Team" : None,
-                            "Player" : None,
-                        }
-                    elif last_event["Type"] == "SET PIECE":
-                        current_possession["Team"] = event["Team"]
-                        current_possession["Player"] = event["From"]
-                        current_possession["StartFrame"] = event["Start Frame"]
+                            #Kick Start new ball sequence
+                            current_possession = {
+                                "StartFrame" : None,
+                                "EndFrame" : None,
+                                "Team" : None,
+                                "Player" : None,
+                            }
+                        elif last_event["Type"] == "SET PIECE":
+                            current_possession["Team"] = event["Team"]
+                            current_possession["Player"] = event["From"]
+                            current_possession["StartFrame"] = event["Start Frame"]
 
-                        current_possession["EndFrame"] = event["Start Frame"]
-                        last_possession = current_possession.copy()
-                        possessions.append(last_possession)
-                    elif(current_possession["Player"] == event["From"]):
-                        current_possession["EndFrame"] = event["Start Frame"]
-                        last_possession = current_possession.copy()
-                        possessions.append(last_possession)
+                            current_possession["EndFrame"] = event["Start Frame"]
+                            last_possession = current_possession.copy()
+                            possessions.append(last_possession)
+
+                            current_possession = {
+                                "StartFrame" : None,
+                                "EndFrame" : None,
+                                "Team" : None,
+                                "Player" : None,
+                            }
+                        elif(current_possession["Player"] == event["From"]):
+                            current_possession["EndFrame"] = event["Start Frame"]
+                            last_possession = current_possession.copy()
+                            possessions.append(last_possession)
+
+                            current_possession = {
+                                "StartFrame" : None,
+                                "EndFrame" : None,
+                                "Team" : None,
+                                "Player" : None,
+                            }
                 elif event["Type"] == "RECOVERY":
-                    last_event = events.iloc[i-1]
-                    if event["Subtype"] == "THEFT" or last_event["Type"] != "BALL LOST":
-                        #End Possession
-                        current_possession["EndFrame"] = event["Start Frame"]
+                    if i-1 in events.index:
+                        last_event = events.loc[i-1]
+                        if event["Subtype"] == "THEFT" or last_event["Type"] != "BALL LOST":
+                            #End Possession
+                            current_possession["EndFrame"] = event["Start Frame"]
 
-                        last_possession = current_possession.copy()
-                        possessions.append(last_possession)
-
+                            last_possession = current_possession.copy()
+                            possessions.append(last_possession)
                     current_possession["Team"] = event["Team"]
                     current_possession["Player"] = event["From"]
                     current_possession["StartFrame"] = event["Start Frame"]
@@ -283,13 +312,13 @@ class Match:
                         "Player" : None,
                     }
                 elif event["Type"] == "BALL OUT":
-
-                    last_event = events.iloc[i-1]
-                    #Free kick went out
-                    if last_event["Type"] == "SET PIECE":
-                        current_possession["Team"] = event["Team"]
-                        current_possession["Player"] = event["From"]
-                        current_possession["StartFrame"] = event["Start Frame"]
+                    if i-1 in events.index:
+                        last_event = events.loc[i-1]
+                        #Free kick went out
+                        if last_event["Type"] == "SET PIECE":
+                            current_possession["Team"] = event["Team"]
+                            current_possession["Player"] = event["From"]
+                            current_possession["StartFrame"] = event["Start Frame"]
 
                     #End of Possession
                     current_possession["EndFrame"] = event["Start Frame"]
