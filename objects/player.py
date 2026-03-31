@@ -15,6 +15,8 @@ class Player:
         return (self.x, self.y)
     
     def coords_in_radius(self, radius=5):
+        radius = int(radius)+1
+
         x = self.x
         y = self.y
         step = 1
@@ -44,7 +46,6 @@ class Player:
             "team" : self.team
         }
     
-
     # Return True if point is in player's peripheralvision
     def in_peripheral_vision(self, point_x, point_y):
         if self.vx == 0 and self.vy == 0:
@@ -56,3 +57,24 @@ class Player:
         dot = self.vx * dx + self.vy * dy
         
         return dot >= 0
+
+    def in_direct_view(self, point_x, point_y, half_angle_deg=45):
+        if self.vx == 0 and self.vy == 0:
+            return False
+
+        dx = point_x - self.x
+        dy = point_y - self.y
+
+        dot = self.vx * dx + self.vy * dy
+
+        v_mag_sq = self.vx**2 + self.vy**2
+        d_mag_sq = dx**2 + dy**2
+
+        if d_mag_sq == 0:
+            return True
+
+        # Convert angle to cosine threshold
+        cos_theta = math.cos(math.radians(half_angle_deg))
+
+        # Compare without sqrt
+        return dot > 0 and (dot**2 >= (cos_theta**2) * v_mag_sq * d_mag_sq)

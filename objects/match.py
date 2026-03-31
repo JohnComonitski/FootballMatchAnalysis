@@ -77,6 +77,7 @@ class Match:
 
         events = self.events
         event = events[events["Start Frame"] == frame]
+        print(event)
         if event.empty:
             event =  None
         else:
