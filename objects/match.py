@@ -64,16 +64,43 @@ class Match:
         return shots[shots['Subtype'].str.contains('-GOAL')]
     
     def players(self, team = None):
-        if team == "Home":
-            team = self.tracking_home.iloc[0]
-            return self.players_to_list(team)
-        elif team == "Away":
-            team = self.tracking_away.iloc[0]
-            return self.players_to_list(team)
+        if self.tracking_home is not None:
+            if team == "Home":
+                team = self.tracking_home.iloc[0]
+                return self.players_to_list(team)
+            elif team == "Away":
+                team = self.tracking_away.iloc[0]
+                return self.players_to_list(team)
+            else:
+                home = self.tracking_home.iloc[0]
+                away = self.tracking_away.iloc[0]
+                return self.players_to_list(home) + self.players_to_list(away)
         else:
-            home = self.tracking_home.iloc[0]
-            away = self.tracking_away.iloc[0]
-            return self.players_to_list(home) + self.players_to_list(away)
+            player_names = []
+            if team == "Home" or team == "Away":
+                team_id = str(self.metadata[team.lower()])
+                events = self.events    
+                events = events[ events["Team"] == team_id]
+                player_names = events["From"].dropna().unique().tolist()
+            else:
+                events = self.events    
+                player_names = player_names + events["From"].dropna().unique().tolist()
+            
+            players = []
+            for player_name in player_names:
+                name = player_name.split("Player")[1]
+                team = self.get_players_team(player_name)
+                players.append(Player(None, None, None, None, None, team, name))
+
+            return players
+
+    def get_players_team(self, name):
+        if "Player" not in name:
+            name = f"Player{name}"
+        
+        events = self.events
+        team = events.loc[events["From"] == name, "Team"].iloc[0]
+        return team
 
     def get_event(self, frame):
         row = self.events[self.events["Start Frame"] == frame]
