@@ -13,6 +13,8 @@ Data can be found at: https://github.com/metrica-sports/sample-data
 import pandas as pd
 import csv as csv
 import numpy as np
+from pathlib import Path
+import json
 
 def read_match_data(DATADIR,gameid):
     '''
@@ -23,6 +25,33 @@ def read_match_data(DATADIR,gameid):
     tracking_away = tracking_data(DATADIR,gameid,'Away')
     events = read_event_data(DATADIR,gameid)
     return tracking_home,tracking_away,events
+
+def read_metadata(DATADIR,game_id):
+    '''
+    read_metadata(DATADIR,game_id):
+    read Match meta data for game_id and return as a dictionary
+    '''
+    metadatafile = '/Sample_Game_%d/Sample_Game_%d_RawMetadata.json' % (game_id,game_id) 
+    path = Path(f"{DATADIR}/{metadatafile}")
+
+    if not path.exists():
+        return {}
+
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except json.JSONDecodeError as e:
+        print(f"Invalid JSON in {metadatafile}: {e}")
+        return {}
+    except Exception as e:
+        print(f"Error reading {metadatafile}: {e}")
+        return {}
+    
+    # filename
+    with open(f"{DATADIR}/{metadatafile}", "r", encoding="utf-8") as f:
+        metadata = json.load(f)
+
+    return metadata
 
 def read_event_data(DATADIR,game_id):
     '''

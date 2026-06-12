@@ -10,11 +10,23 @@ class Match:
     def __init__(self, DATADIR, game_id):
         self.datadir = DATADIR
         self.game_id = game_id
+  
 
         # Data Prep and Processing
         events = mio.read_event_data(DATADIR,game_id)
         tracking_home = mio.tracking_data(DATADIR,game_id, 'Home')
         tracking_away = mio.tracking_data(DATADIR,game_id, 'Away')
+        metadata = mio.read_metadata(DATADIR,game_id)
+        self.metadata = metadata
+        
+        self.league_id = None
+        if "league_id" in metadata:
+            self.league_id = metadata["league_id"]
+
+        self.year = None
+        if "league_id" in metadata:
+            self.year = metadata["year"]
+
         if tracking_home is not None:
             tracking_home = mio.to_metric_coordinates(tracking_home)
         if tracking_away is not None:
