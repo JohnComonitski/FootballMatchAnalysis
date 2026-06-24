@@ -137,3 +137,17 @@ def in_front_of_player(start, end, point):
     side_point = nx * (x3 - x2) + ny * (y3 - y2)
 
     return side_start * side_point > 0
+
+def is_progressive_pass(p1, p2, is_home, threshold=10):
+    start_x = p1[0]
+    end_x = p2[0]
+
+    if is_home:
+        distance_progressed = end_x - start_x
+    else:
+        distance_progressed = start_x - end_x
+
+    if distance_progressed >= threshold:
+        return True
+
+    return False

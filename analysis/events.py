@@ -193,4 +193,25 @@ def events_by_player(match, player, type=None, subtype=None, to=None ):
     
     return events
 
+# Take an event and return True of event is a Assists
+def is_assists(match, event):
+    if event["Type"] != "PASS":
+        return False
 
+    idx = match.get_event_index(event)
+
+    while True:
+        idx +=1
+        if 0 <= idx < len(match.events):
+            event = match.events.iloc[idx]
+            if event["Type"] == "SHOT" and "goal" in event["Subtype"].lower(): 
+                return True
+            if event["Type"] in [ "PASS", "BALL LOST", "BALL OUT" "CARD" "SET PIECE", "FAULT RECEIVED" ]:
+                return False
+        else:
+            return False
+        
+def pass_distance(event):
+    start = (event["Start X"], event["Start Y"])
+    end = (event["End X"], event["End Y"])
+    return distance(start, end)
