@@ -11,13 +11,13 @@ class Match:
         self.datadir = DATADIR
         self.game_id = game_id
   
-
         # Data Prep and Processing
-        events = mio.read_event_data(DATADIR,game_id)
+        events, metadata, raw_events = mio.read_event_data(DATADIR,game_id)
         tracking_home = mio.tracking_data(DATADIR,game_id, 'Home')
         tracking_away = mio.tracking_data(DATADIR,game_id, 'Away')
-        metadata = mio.read_metadata(DATADIR,game_id)
+
         self.metadata = metadata
+        self.raw_events = raw_events
         
         self.league_id = None
         if "league_id" in metadata:
@@ -320,6 +320,17 @@ class Match:
                                 "Team" : None,
                                 "Player" : None,
                             }
+                elif "FAULT" in event["Type"]:
+                    current_possession["EndFrame"] = event["Start Frame"]
+                    last_possession = current_possession.copy()
+                    possessions.append(last_possession)
+
+                    current_possession = {
+                        "StartFrame" : None,
+                        "EndFrame" : None,
+                        "Team" : None,
+                        "Player" : None,
+                    }
                 elif event["Type"] == "RECOVERY":
                     if i-1 in events.index:
                         last_event = events.loc[i-1]

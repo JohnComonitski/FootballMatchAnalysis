@@ -9,7 +9,7 @@ Data can be found at: https://github.com/metrica-sports/sample-data
 
 @author: Laurie Shaw (@EightyFivePoint)
 """
-
+import os
 import pandas as pd
 import csv as csv
 import numpy as np
@@ -26,41 +26,52 @@ def read_match_data(DATADIR,gameid):
     events = read_event_data(DATADIR,gameid)
     return tracking_home,tracking_away,events
 
-def read_metadata(DATADIR,game_id):
+def parse_json(path):
     '''
     read_metadata(DATADIR,game_id):
     read Match meta data for game_id and return as a dictionary
     '''
-    metadatafile = '/Sample_Game_%d/Sample_Game_%d_RawMetadata.json' % (game_id,game_id) 
-    path = Path(f"{DATADIR}/{metadatafile}")
-
-    if not path.exists():
-        return {}
 
     try:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
     except json.JSONDecodeError as e:
-        print(f"Invalid JSON in {metadatafile}: {e}")
+        print(f"Invalid JSON in {path}: {e}")
         return {}
     except Exception as e:
-        print(f"Error reading {metadatafile}: {e}")
+        print(f"Error reading {path}: {e}")
         return {}
     
     # filename
-    with open(f"{DATADIR}/{metadatafile}", "r", encoding="utf-8") as f:
-        metadata = json.load(f)
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-    return metadata
+    return data
 
 def read_event_data(DATADIR,game_id):
     '''
     read_event_data(DATADIR,game_id):
     read Metrica event data  for game_id and return as a DataFrame
     '''
-    eventfile = '/Sample_Game_%d/Sample_Game_%d_RawEventsData.csv' % (game_id,game_id) # filename
-    events = pd.read_csv('{}/{}'.format(DATADIR, eventfile)) # read data
-    return events
+    pwd = f'./{DATADIR}/{game_id}/'
+    
+    files = [
+        f for f in os.listdir(pwd)
+        if os.path.isfile(os.path.join(pwd, f))
+    ]
+
+    events, metadata, raw = None, None, None
+    for file in files:
+        path = pwd + file
+
+        if "raw" in file:
+            raw = parse_json(path)
+        elif "metadata" in file:
+            metadata = parse_json(path)
+        elif "csv" in file:
+            events = pd.read_csv(path)
+
+    return events, metadata, raw
 
 def tracking_data(DATADIR,game_id,teamname):
     '''
