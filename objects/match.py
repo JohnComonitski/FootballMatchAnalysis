@@ -20,11 +20,11 @@ class Match:
         self.raw_events = raw_events
         
         self.league_id = None
-        if "league_id" in metadata:
+        if metadata and "league_id" in metadata:
             self.league_id = metadata["league_id"]
 
         self.year = None
-        if "league_id" in metadata:
+        if metadata and "league_id" in metadata:
             self.year = metadata["year"]
 
         if tracking_home is not None:
@@ -474,3 +474,11 @@ class Match:
                 return player
             
         return None
+
+    def get_team(self, player):
+        home = self.home_team()
+        for player in home:
+            if player.name == player.name:
+                return self.metadata.home
+
+        return self.metadata.away
