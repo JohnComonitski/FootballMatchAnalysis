@@ -5,6 +5,7 @@ from FootballMatchAnalysis.objects.player import Player
 from FootballMatchAnalysis.objects.ball import Ball
 from FootballMatchAnalysis.analysis.utils import *
 import cv2
+import pandas as pd
 
 class Match:
     def __init__(self, DATADIR, game_id):
@@ -31,7 +32,7 @@ class Match:
             tracking_home = mio.to_metric_coordinates(tracking_home)
         if tracking_away is not None:
             tracking_away = mio.to_metric_coordinates(tracking_away)
-        events = mio.to_metric_coordinates(events)
+
         tracking_home,tracking_away,events = mio.to_single_playing_direction(tracking_home,tracking_away,events)
         
         # Calculate Player Velocities
@@ -482,3 +483,29 @@ class Match:
                 return self.metadata.home
 
         return self.metadata.away
+
+    def get_home_team_id(self):
+        events = self.events
+        team_ids = events["Team"].unique().tolist()
+        for team_id in team_ids:
+            shots = events[events["Type"] == "SHOT"]
+            shots = shots[shots["Team"] == team_id]
+
+            avg_x = pd.to_numeric(shots["Start X"], errors="coerce").mean()
+            if avg_x >= 0:
+                return team_id
+
+        return None
+
+    def get_away_team_id(self):
+        events = self.events
+        team_ids = events["Team"].unique().tolist()
+        for team_id in team_ids:
+            shots = events[events["Type"] == "SHOT"]
+            shots = shots[shots["Team"] == team_id]
+
+            avg_x = pd.to_numeric(shots["Start X"], errors="coerce").mean()
+            if avg_x <= 0:
+                return team_id
+            
+        return None

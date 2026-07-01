@@ -24,7 +24,7 @@ def read_match_data(DATADIR,gameid):
     tracking_home = tracking_data(DATADIR,gameid,'Home')
     tracking_away = tracking_data(DATADIR,gameid,'Away')
     events = read_event_data(DATADIR,gameid)
-    return tracking_home,tracking_away,events
+    return tracking_home, tracking_away, events
 
 def parse_json(path):
     '''
@@ -79,7 +79,7 @@ def tracking_data(DATADIR,game_id,teamname):
     read Metrica tracking data for game_id and return as a DataFrame. 
     teamname is the name of the team in the filename. For the sample data this is either 'Home' or 'Away'.
     '''
-    teamfile = '/Sample_Game_%d/Sample_Game_%d_RawTrackingData_%s_Team.csv' % (game_id,game_id,teamname)
+    teamfile = '/%d/%d_RawTrackingData_%s_Team.csv' % (game_id,game_id,teamname)
     # First:  deal with file headers so that we can get the player names correct
     try:
         csvfile =  open('{}/{}'.format(DATADIR, teamfile), 'r') # create a csv file reader
