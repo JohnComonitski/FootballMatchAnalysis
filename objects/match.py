@@ -78,10 +78,9 @@ class Match:
                 return self.players_to_list(home) + self.players_to_list(away)
         else:
             player_names = []
-            if team == "Home" or team == "Away":
-                team_id = str(self.metadata[team.lower()])
+            if team is not None:
                 events = self.events    
-                events = events[ events["Team"] == team_id]
+                events = events[ events["Team"] == team]
                 player_names = events["From"].dropna().unique().tolist()
             else:
                 events = self.events    
@@ -117,7 +116,7 @@ class Match:
 
         events = self.events
         event = events[events["Start Frame"] == frame]
-        print(event)
+
         if event.empty:
             event =  None
         else:
@@ -144,10 +143,10 @@ class Match:
         return Moment(frame, event, home_players, away_players, time, state)
     
     def home_team(self):
-        return self.players(team="Home")
+        return self.players(team=self.get_home_team_id())
 
     def away_team(self):
-        return self.players(team="Away")
+        return self.players(team=self.get_away_team_id())
     
     def ball(self):
         return Ball(None, None, None, None, None)
@@ -484,9 +483,14 @@ class Match:
 
         return self.metadata.away
 
+        
+    def teams(self):
+        return self.events["Team"].unique().tolist()
+
     def get_home_team_id(self):
         events = self.events
-        team_ids = events["Team"].unique().tolist()
+        team_ids = self.teams()
+
         for team_id in team_ids:
             shots = events[events["Type"] == "SHOT"]
             shots = shots[shots["Team"] == team_id]
@@ -499,7 +503,8 @@ class Match:
 
     def get_away_team_id(self):
         events = self.events
-        team_ids = events["Team"].unique().tolist()
+        team_ids = self.teams()
+        
         for team_id in team_ids:
             shots = events[events["Type"] == "SHOT"]
             shots = shots[shots["Team"] == team_id]
@@ -509,3 +514,11 @@ class Match:
                 return team_id
             
         return None
+
+    def is_home_team(self, player):
+        if player.team == self.get_home_team_id():
+            return True
+
+    def is_away_team(self, player):
+        if player.team == self.get_away_team_id():
+            return True

@@ -151,3 +151,47 @@ def is_progressive_pass(p1, p2, is_home, threshold=10):
         return True
 
     return False
+
+def is_defensive_third(point, is_home=True):
+    if is_home:
+        if point[0] <= -17.67:
+            return True
+    else:
+        if point[0] >= 17.67:
+            return True
+
+    return False
+
+def is_middle_third(point, is_home=True):
+    if point[0] > -17.67 and point[0] < 17.67:
+        return True
+
+    return False
+
+def is_final_third(point, is_home=True):
+    if is_home:
+        if point[0] >= 17.67:
+            return True
+    else:
+        if point[0] <= -17.67:
+            return True
+
+    return False
+
+def is_in_home_box(point):
+    x, y = point
+    box_x_1 = 36.5
+    box_x_2 = 53
+    box_y_1 = -20 
+    box_y_2 = 20
+
+    return box_x_1 <= x <= box_x_2 and box_y_1 <= y <= box_y_2
+
+def is_in_away_box(point):
+    x, y = point
+    box_x_1 = -53
+    box_x_2 = -36.5
+    box_y_1 = -20 
+    box_y_2 = 20
+
+    return box_x_1 <= x <= box_x_2 and box_y_1 <= y <= box_y_2
