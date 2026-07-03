@@ -129,10 +129,9 @@ def coordinate_to_metric(x, y, field_dimen=(106., 68.)):
     ym = -1 * (y - 0.5) * field_dimen[1]
     return xm, ym
 
+'''
 def to_single_playing_direction(home,away,events):
-    '''
-    Flip coordinates in second half so that each team always shoots in the same direction through the match.
-    '''
+    #Flip coordinates in second half so that each team always shoots in the same direction through the match.
     if home is not None and away is not None:
         for team in [home,away,events]:
             second_half_idx = team.Period.eq(2).idxmax()
@@ -144,6 +143,16 @@ def to_single_playing_direction(home,away,events):
             columns = [c for c in team.columns if c[-1].lower() in ['x','y']]
             team.loc[second_half_idx:,columns] *= -1   
     return home,away,events
+'''
+
+def to_single_playing_direction(home,away):
+    #Flip coordinates in second half so that each team always shoots in the same direction through the match.
+    if home is not None and away is not None:
+        for team in [home,away]:
+            second_half_idx = team.Period.eq(2).idxmax()
+            columns = [c for c in team.columns if c[-1].lower() in ['x','y']]
+            team.loc[second_half_idx:,columns] *= -1
+    return home,away
 
 def find_playing_direction(team,teamname):
     '''

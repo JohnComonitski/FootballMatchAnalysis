@@ -138,11 +138,11 @@ def in_front_of_player(start, end, point):
 
     return side_start * side_point > 0
 
-def is_progressive_pass(p1, p2, is_home, threshold=10):
+def is_progressive_pass(p1, p2, is_attacking_right=True, threshold=10):
     start_x = p1[0]
     end_x = p2[0]
 
-    if is_home:
+    if is_attacking_right:
         distance_progressed = end_x - start_x
     else:
         distance_progressed = start_x - end_x
@@ -152,8 +152,8 @@ def is_progressive_pass(p1, p2, is_home, threshold=10):
 
     return False
 
-def is_defensive_third(point, is_home=True):
-    if is_home:
+def is_defensive_third(point, is_attacking_right=True):
+    if is_attacking_right:
         if point[0] <= -17.67:
             return True
     else:
@@ -162,14 +162,14 @@ def is_defensive_third(point, is_home=True):
 
     return False
 
-def is_middle_third(point, is_home=True):
+def is_middle_third(point, is_attacking_right=True):
     if point[0] > -17.67 and point[0] < 17.67:
         return True
 
     return False
 
-def is_final_third(point, is_home=True):
-    if is_home:
+def is_final_third(point, is_attacking_right=True):
+    if is_attacking_right:
         if point[0] >= 17.67:
             return True
     else:
@@ -178,7 +178,7 @@ def is_final_third(point, is_home=True):
 
     return False
 
-def is_in_home_box(point):
+def is_in_right_box(point):
     x, y = point
     box_x_1 = 36.5
     box_x_2 = 53
@@ -187,7 +187,7 @@ def is_in_home_box(point):
 
     return box_x_1 <= x <= box_x_2 and box_y_1 <= y <= box_y_2
 
-def is_in_away_box(point):
+def is_in_left_box(point):
     x, y = point
     box_x_1 = -53
     box_x_2 = -36.5

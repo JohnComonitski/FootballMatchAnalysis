@@ -33,7 +33,7 @@ class Match:
         if tracking_away is not None:
             tracking_away = mio.to_metric_coordinates(tracking_away)
 
-        tracking_home,tracking_away,events = mio.to_single_playing_direction(tracking_home,tracking_away,events)
+        tracking_home,tracking_away = mio.to_single_playing_direction(tracking_home,tracking_away)
         
         # Calculate Player Velocities
         if tracking_home is not None:
@@ -487,7 +487,7 @@ class Match:
     def teams(self):
         return self.events["Team"].unique().tolist()
 
-    def get_home_team_id(self):
+    def team_attacking_right(self):
         events = self.events
         team_ids = self.teams()
 
@@ -501,7 +501,7 @@ class Match:
 
         return None
 
-    def get_away_team_id(self):
+    def team_attacking_left(self):
         events = self.events
         team_ids = self.teams()
         
@@ -515,10 +515,10 @@ class Match:
             
         return None
 
-    def is_home_team(self, player):
-        if player.team == self.get_home_team_id():
+    def is_attacking_right(self, player):
+        if player.team == self.team_attacking_right():
             return True
 
-    def is_away_team(self, player):
-        if player.team == self.get_away_team_id():
+    def is_attacking_left(self, player):
+        if player.team == self.team_attacking_left():
             return True
