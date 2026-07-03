@@ -215,3 +215,23 @@ def pass_distance(event):
     start = (event["Start X"], event["Start Y"])
     end = (event["End X"], event["End Y"])
     return distance(start, end)
+
+def shot_from_key_pass(match, event):
+    if not is_key_pass(match, event):
+        return None
+    
+    if event["Type"] != "PASS":
+        return False
+
+    idx = match.get_event_index(event)
+
+    while True:
+        idx +=1
+        if 0 <= idx < len(match.events):
+            event = match.events.iloc[idx]
+            if event["Type"] == "SHOT":
+                return event
+            if event["Type"] in [ "PASS", "BALL LOST", "BALL OUT" "CARD" "SET PIECE", "FAULT RECEIVED" ]:
+                return None
+        else:
+            return None
