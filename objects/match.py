@@ -522,3 +522,47 @@ class Match:
     def is_attacking_left(self, player):
         if player.team == self.team_attacking_left():
             return True
+        
+    def team_in_possession(self, frame_number):
+        possessions = self.time_on_ball
+        for possession in possessions:
+            start = possession["StartFrame"]
+            end = possession["EndFrame"]
+
+            if start is None or end is None:
+                continue
+
+            if frame_number > start and frame_number <= end:
+                return possession["Team"]
+            
+    def player_on_ball(self, frame_number):
+        possessions = self.time_on_ball
+        for possession in possessions:
+            start = possession["StartFrame"]
+            end = possession["EndFrame"]
+
+            if start is None or end is None:
+                continue
+
+            if frame_number > start and frame_number <= end:
+                return self.get_player(possession["Player"])
+            
+    def get_possession(self, frame_number):
+        possessions = self.time_on_ball
+        for possession in possessions:
+            start = possession["StartFrame"]
+            end = possession["EndFrame"]
+
+            if start is None or end is None:
+                continue
+
+            if frame_number > start and frame_number <= end:
+                return possession
+            
+    def events_from_possession(self, possession):
+        start = possession["StartFrame"]
+        end = possession["EndFrame"]
+        events = self.events
+
+        subset =  events[(((events["Start Frame"] >= start) | (events["End Frame"] >= start)) & (events["Start Frame"] <= end))]
+        return subset
