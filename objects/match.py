@@ -143,10 +143,10 @@ class Match:
         return Moment(frame, event, home_players, away_players, time, state)
     
     def home_team(self):
-        return self.players(team=self.get_home_team_id())
+        return self.players(team=self.team_attacking_right())
 
     def away_team(self):
-        return self.players(team=self.get_away_team_id())
+        return self.players(team=self.team_attacking_left())
     
     def ball(self):
         return Ball(None, None, None, None, None)
@@ -476,13 +476,11 @@ class Match:
         return None
 
     def get_team(self, player):
-        home = self.home_team()
-        for player in home:
-            if player.name == player.name:
-                return self.metadata.home
-
-        return self.metadata.away
-
+        team_ids = self.teams()
+        for team_id in team_ids:
+            for tmp_player in self.players(team_id):
+                if player.name == tmp_player.name:
+                    return team_id
         
     def teams(self):
         return self.events["Team"].unique().tolist()
