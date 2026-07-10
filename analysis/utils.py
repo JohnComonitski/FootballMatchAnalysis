@@ -195,3 +195,33 @@ def is_in_left_box(point):
     box_y_2 = 20
 
     return box_x_1 <= x <= box_x_2 and box_y_1 <= y <= box_y_2
+
+def is_top_lane(point):
+    y = point[1]
+    if y <= 34 and y > 20.4:
+        return True
+    return False
+
+def is_top_channel(point):
+    y = point[1]
+    if y <= 20.4 and y > 6.8:
+        return True
+    return False
+
+def is_middle_lane(point):
+    y = point[1]
+    if y <= 6.8 and y > -6.8:
+        return True
+    return False
+
+def is_bottom_channel(point):
+    y = point[1]
+    if y <= -6.8 and y > -20.4:
+        return True
+    return False
+
+def is_bottom_lane(point):
+    y = point[1]
+    if y <= -20.4 and y >= -34:
+        return True
+    return False
