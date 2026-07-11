@@ -215,7 +215,7 @@ class Match:
                 has_moment = False
 
     def get_time_on_ball(self, start=None, end=None, return_res=None):
-        skip_events = [ "CHALLENGE", "SET PIECE", "CARD" ]
+        skip_events = [ "CHALLENGE", "SET PIECE", "FREE KICK", "CARD", "FAULT RECEIVED" ]
         if start is None:
             start = 0
 
@@ -321,16 +321,17 @@ class Match:
                                 "Player" : None,
                             }
                 elif "FAULT" in event["Type"]:
-                    current_possession["EndFrame"] = event["Start Frame"]
-                    last_possession = current_possession.copy()
-                    possessions.append(last_possession)
+                    if current_possession["StartFrame"] is not None:
+                        current_possession["EndFrame"] = event["Start Frame"]
+                        last_possession = current_possession.copy()
+                        possessions.append(last_possession)
 
-                    current_possession = {
-                        "StartFrame" : None,
-                        "EndFrame" : None,
-                        "Team" : None,
-                        "Player" : None,
-                    }
+                        current_possession = {
+                            "StartFrame" : None,
+                            "EndFrame" : None,
+                            "Team" : None,
+                            "Player" : None,
+                        }
                 elif event["Type"] == "RECOVERY":
                     if i-1 in events.index:
                         last_event = events.loc[i-1]
