@@ -79,9 +79,11 @@ class Match:
         else:
             player_names = []
             if team is not None:
-                events = self.events    
-                events = events[ events["Team"] == team]
-                player_names = events["From"].dropna().unique().tolist()
+                all_player_names = self.events["From"].dropna().unique().tolist()
+                for player_name in all_player_names:
+                    p = self.get_player(player_name)
+                    if p.team == team:
+                        player_names.append(player_name)
             else:
                 events = self.events    
                 player_names = player_names + events["From"].dropna().unique().tolist()
