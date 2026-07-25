@@ -79,7 +79,7 @@ def tracking_data(DATADIR,game_id,teamname):
     read Metrica tracking data for game_id and return as a DataFrame. 
     teamname is the name of the team in the filename. For the sample data this is either 'Home' or 'Away'.
     '''
-    teamfile = '/%d/%d_RawTrackingData_%s_Team.csv' % (game_id,game_id,teamname)
+    teamfile = f'/{game_id}/{game_id}_RawTrackingData_{teamname}_Team.csv'
     # First:  deal with file headers so that we can get the player names correct
     try:
         csvfile =  open('{}/{}'.format(DATADIR, teamfile), 'r') # create a csv file reader
