@@ -18,7 +18,7 @@ def is_key_pass(match, event):
         idx +=1
         if 0 <= idx < len(match.events):
             event = match.events.iloc[idx]
-            if event["Type"] == "SHOT":
+            if event["Type"] == "SHOT" and "OWN-GOAL" != event["Subtype"]:
                 return True
             if event["Type"] in [ "PASS", "BALL LOST", "BALL OUT" "CARD" "SET PIECE", "FAULT RECEIVED" ]:
                 return False
@@ -204,7 +204,7 @@ def is_assists(match, event):
         idx +=1
         if 0 <= idx < len(match.events):
             event = match.events.iloc[idx]
-            if event["Type"] == "SHOT" and "goal" in event["Subtype"].lower(): 
+            if event["Type"] == "SHOT" and "goal" in event["Subtype"].lower() and "OWN-GOAL" != event["Subtype"]: 
                 return True
             if event["Type"] in [ "PASS", "BALL LOST", "BALL OUT" "CARD" "SET PIECE", "FAULT RECEIVED" ]:
                 return False
