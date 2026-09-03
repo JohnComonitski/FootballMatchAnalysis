@@ -152,6 +152,26 @@ def is_progressive_pass(p1, p2, is_attacking_right=True, threshold=10):
 
     return False
 
+def is_own_half(point, is_attacking_right=True):
+    if is_attacking_right:
+        if point[0] <= 0:
+            return True
+    else:
+        if point[0] > 0:
+            return True
+
+    return False
+
+def is_opposition_half(point, is_attacking_right=True):
+    if is_attacking_right:
+        if point[0] >= 0:
+            return True
+    else:
+        if point[0] < 0:
+            return True
+
+    return False
+
 def is_defensive_third(point, is_attacking_right=True):
     if is_attacking_right:
         if point[0] <= -17.67:

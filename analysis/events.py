@@ -235,3 +235,95 @@ def shot_from_key_pass(match, event):
                 return None
         else:
             return None
+
+def related_event(match, event):
+    index = event.name
+
+    if event["Type"] == "BALL LOST" and event["Subtype"] == "INTERCEPTION":
+        next_event = match.events.iloc[index + 1]
+        if next_event["Type"] == "RECOVERY" and next_event["Subtype"] == "INTERCEPTION":
+           return next_event
+    elif event["Type"] == "RECOVERY": 
+        if event["Subtype"] == "INTERCEPTION":
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "BALL LOST" and prev_event["Subtype"] == "INTERCEPTION":
+                return prev_event
+        elif event["Subtype"] == "BLOCKED":
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "SHOT":
+                return prev_event
+    elif event["Type"] == "SHOT": 
+        if "BLOCKED" in event["Subtype"]:
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "RECOVERY" and next_event["Subtype"] in [ "SAVED", "BLOCKED" ]:
+                return next_event
+    elif event["Type"] == "CHALLENGE":
+        if event["Subtype"] == "AERIAL-WON":
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] == "AERIAL-LOST":
+                return next_event
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] == "AERIAL-LOST":
+                return prev_event
+        elif event["Subtype"] == "AERIAL-LOST":
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] == "AERIAL-WON":
+                return next_event
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] == "AERIAL-WON":
+                return prev_event
+        elif event["Subtype"] == "DRIBBLE-WON":
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] == "TACKLE-LOST":
+                return next_event
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] == "TACKLE-LOST":
+                return prev_event
+        elif event["Subtype"] == "DRIBBLE-LOST":
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] in ["TACKLE-WON", "TACKLE-LOST"]:
+                return next_event
+            next_event = match.events.iloc[index + 2]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] in ["TACKLE-WON", "TACKLE-LOST"]:
+                return next_event
+        elif event["Subtype"] == "TACKLE-WON":
+            prev_event = match.events.iloc[index - 2]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] in ["DRIBBLE-LOST", "TACKLE-LOST"]:
+                return prev_event
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] in ["DRIBBLE-LOST", "TACKLE-LOST"]:
+                return prev_event
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] in ["DRIBBLE-LOST", "TACKLE-LOST"]:
+                return next_event
+            next_event = match.events.iloc[index + 2]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] in ["DRIBBLE-LOST", "TACKLE-LOST"]:
+                return next_event
+        elif event["Subtype"] == "TACKLE-LOST":
+            prev_event = match.events.iloc[index - 2]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] in ["DRIBBLE-LOST", "DRIBBLE-WON", "TACKLE-WON", "TACKLE-LOST"]:
+                return prev_event
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] in ["DRIBBLE-LOST", "DRIBBLE-WON", "TACKLE-WON", "TACKLE-LOST"]:
+                return prev_event
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] in ["DRIBBLE-LOST", "DRIBBLE-WON", "TACKLE-WON", "TACKLE-LOST"]:
+                return next_event
+            next_event = match.events.iloc[index + 2]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] in ["DRIBBLE-LOST", "DRIBBLE-WON", "TACKLE-WON", "TACKLE-LOST"]:
+                return next_event
+        elif event["Subtype"] == "GROUND-FAULT-LOST":
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] == "GROUND-FAULT-WON":
+                return next_event
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] == "GROUND-FAULT-WON":
+                return prev_event
+        elif event["Subtype"] == "GROUND-FAULT-WON":
+            next_event = match.events.iloc[index + 1]
+            if next_event["Type"] == "CHALLENGE" and next_event["Subtype"] == "GROUND-FAULT-LOST":
+                return next_event
+            prev_event = match.events.iloc[index - 1]
+            if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] == "GROUND-FAULT-LOST":
+                return prev_event
+        

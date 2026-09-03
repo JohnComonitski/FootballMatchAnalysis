@@ -47,6 +47,7 @@ class Match:
         self.game_states = None
         self.time_on_ball = None
         self.get_time_on_ball()
+        self.generate_sequences()
 
     def event_types(self):
         return self.events['Type'].unique()
@@ -82,7 +83,7 @@ class Match:
                 all_player_names = self.events["From"].dropna().unique().tolist()
                 for player_name in all_player_names:
                     p = self.get_player(player_name)
-                    if p.team == team:
+                    if p.team == int(team):
                         player_names.append(player_name)
             else:
                 events = self.events    
@@ -227,12 +228,14 @@ class Match:
             "EndFrame" : None,
             "Team" : None,
             "Player" : None,
+            "Period" : None
         }
         current_possession = {
             "StartFrame" : None,
             "EndFrame" : None,
             "Team" : None,
             "Player" : None,
+            "Period" : None
         }
 
         
@@ -243,26 +246,34 @@ class Match:
             current_possession["Team"] = event["Team"]
             current_possession["Player"] = event["From"]
             current_possession["StartFrame"] = event["Start Frame"]
+            current_possession["Period"] = event["Period"]
         else:
             event = events.loc[1]
             current_possession["Team"] = event["Team"]
             current_possession["Player"] = event["From"]
             current_possession["StartFrame"] = event["Start Frame"]
+            current_possession["Period"] = event["Period"]
 
         for i, event in events.iterrows():
+            #if(len(possessions) == 577):
+            #    print(current_possession)
+            #    print()
+            #    print(i)
+            #    print(event)
+
             if current_possession["StartFrame"] is None and ( event["Type"] not in skip_events ) and ( event["Type"] not in ["BALL LOST", "BALL OUT", "PASS"] ):
                 current_possession["Team"] = event["Team"]
                 current_possession["Player"] = event["From"]
                 current_possession["StartFrame"] = event["Start Frame"]
-
+                current_possession["Period"] = event["Period"]
             else:
                 if current_possession["StartFrame"] is None and ( event["Type"] not in skip_events ) and ( event["Type"] not in ["BALL LOST", "BALL OUT"] ):
                     current_possession["Team"] = event["Team"]
                     current_possession["Player"] = event["From"]
-                    current_possession["StartFrame"] = event["Start Frame"] 
+                    current_possession["StartFrame"] = event["Start Frame"]
+                    current_possession["Period"] = event["Period"] 
 
                 if event["Type"] == "PASS":
-
                     if i-1 in events.index:
                         last_event = events.loc[i-1]
                         if last_event["Type"] == "SET PIECE" or event["Subtype"] == "GOAL KICK":
@@ -272,15 +283,25 @@ class Match:
                     current_possession["Team"] = event["Team"]
                     current_possession["Player"] = event["From"]
                     current_possession["EndFrame"] = event["Start Frame"]
+                    current_possession["Period"] = event["Period"]
 
                     last_possession = current_possession.copy()
                     possessions.append(last_possession)
+                    current_possession = {
+                        "StartFrame" : None,
+                        "EndFrame" : None,
+                        "Team" : None,
+                        "Player" : None,
+                    }
 
                     #Possession of pass reciever
                     current_possession["Team"] = event["Team"]
                     current_possession["Player"] = event["To"]
                     current_possession["StartFrame"] = event["End Frame"]
+                    current_possession["Period"] = event["Period"]
+
                 elif event["Type"] == "BALL LOST":
+
                     if i-1 in events.index:
                         last_event = events.loc[i-1]
                         if event["Subtype"] == "END HALF":
@@ -295,11 +316,13 @@ class Match:
                                 "EndFrame" : None,
                                 "Team" : None,
                                 "Player" : None,
+                                "Period" : None
                             }
                         elif last_event["Type"] == "SET PIECE":
                             current_possession["Team"] = event["Team"]
                             current_possession["Player"] = event["From"]
                             current_possession["StartFrame"] = event["Start Frame"]
+                            current_possession["Period"] = event["Period"]
 
                             current_possession["EndFrame"] = event["Start Frame"]
                             last_possession = current_possession.copy()
@@ -310,6 +333,7 @@ class Match:
                                 "EndFrame" : None,
                                 "Team" : None,
                                 "Player" : None,
+                                "Period" : None
                             }
                         elif(current_possession["Player"] == event["From"]):
                             current_possession["EndFrame"] = event["Start Frame"]
@@ -321,6 +345,7 @@ class Match:
                                 "EndFrame" : None,
                                 "Team" : None,
                                 "Player" : None,
+                                "Period" : None
                             }
                 elif "FAULT" in event["Type"]:
                     if current_possession["StartFrame"] is not None:
@@ -333,6 +358,7 @@ class Match:
                             "EndFrame" : None,
                             "Team" : None,
                             "Player" : None,
+                            "Period" : None
                         }
                 elif event["Type"] == "RECOVERY":
                     if i-1 in events.index:
@@ -346,6 +372,7 @@ class Match:
                     current_possession["Team"] = event["Team"]
                     current_possession["Player"] = event["From"]
                     current_possession["StartFrame"] = event["Start Frame"]
+                    current_possession["Period"] = event["Period"]
                 elif event["Type"] == "CHALLENGE":
                     pass
                 elif event["Type"] == "SET PIECE":
@@ -364,6 +391,7 @@ class Match:
                         "EndFrame" : None,
                         "Team" : None,
                         "Player" : None,
+                        "Period" : None
                     }
                 elif event["Type"] == "BALL OUT":
                     if i-1 in events.index:
@@ -373,6 +401,7 @@ class Match:
                             current_possession["Team"] = event["Team"]
                             current_possession["Player"] = event["From"]
                             current_possession["StartFrame"] = event["Start Frame"]
+                            current_possession["Period"] = event["Period"]
 
                     #End of Possession
                     current_possession["EndFrame"] = event["Start Frame"]
@@ -385,6 +414,7 @@ class Match:
                         "EndFrame" : None,
                         "Team" : None,
                         "Player" : None,
+                        "Period" : None
                     }
                 elif event["Type"] == "SHOT":
                     #End of Possession
@@ -398,6 +428,7 @@ class Match:
                         "EndFrame" : None,
                         "Team" : None,
                         "Player" : None,
+                        "Period" : None
                     }
 
         if return_res:
@@ -405,6 +436,72 @@ class Match:
         
         self.time_on_ball = possessions
     
+    def generate_sequences(self):
+        possessions = self.time_on_ball
+        team_on_ball = None
+        period = 1
+        idx = 0
+
+        raw_sequences = []
+        current_sequence = []
+        for possession in possessions:
+            if team_on_ball is None:
+                period = possession["Period"]
+                team_on_ball = possession["Team"]
+                
+            if possession["EndFrame"] is None or possession["StartFrame"] is None:
+                idx+=1
+                continue
+
+            length = possession["EndFrame"] - possession["StartFrame"]
+            if length > (20*24):
+                raw_sequences.append(current_sequence)
+                current_sequence = []
+                team_on_ball = None
+                idx+=1
+                continue
+
+            if period != possession["Period"]:
+                raw_sequences.append(current_sequence)
+                current_sequence = []
+                team_on_ball = None
+                idx+=1
+                continue
+
+            if possession["Team"] == team_on_ball:
+                current_sequence.append(possession)
+            else:
+                if length < 24:
+                    if self.time_on_ball[idx+1]["Team"] == team_on_ball:
+                        current_sequence.append(possession)
+                    else:
+                        raw_sequences.append(current_sequence)
+                        current_sequence = [ possession ]
+                        team_on_ball = possession["Team"]
+                        period = possession["Period"]
+                else:
+                    raw_sequences.append(current_sequence)
+                    current_sequence = [ possession ]
+                    team_on_ball = possession["Team"]
+                    period = possession["Period"]
+
+            idx+=1
+
+        raw_sequences.append(current_sequence)
+
+        sequences = []
+        for raw_sequence in raw_sequences:
+            sequence = {
+                "Team" : raw_sequence[0]["Team"],
+                "StartFrame" : raw_sequence[0]["StartFrame"],
+                "EndFrame" : raw_sequence[-1]["EndFrame"],
+                "Period" : raw_sequence[0]["Period"],
+                "Possessions" : raw_sequence
+            }
+            sequences.append(sequence)
+
+        self.sequences = sequences
+
     def whos_on_ball(self, frame_number):
         for possession in self.time_on_ball:
             if str(frame_number) == str(possession["StartFrame"]) and str(frame_number) == str(possession["EndFrame"]):
@@ -519,11 +616,13 @@ class Match:
     def is_attacking_right(self, player):
         if player.team == self.team_attacking_right():
             return True
+        return False
 
     def is_attacking_left(self, player):
         if player.team == self.team_attacking_left():
             return True
-        
+        return False
+    
     def team_in_possession(self, frame_number):
         possessions = self.time_on_ball
         for possession in possessions:
@@ -565,5 +664,22 @@ class Match:
         end = possession["EndFrame"]
         events = self.events
 
-        subset =  events[(((events["Start Frame"] >= start) | (events["End Frame"] >= start)) & (events["Start Frame"] <= end))]
+        subset =  events[(((events["Start Frame"] >= start) | (events["End Frame"] >= start)) & ((events["Start Frame"] <= end) | (events["End Frame"] <= end)))]
         return subset
+
+    def get_sequence_from_event(self, event):
+        sequences = self.sequences
+        team = event["Team"]
+
+        sequence_candidates = []
+        for sequence in sequences:
+            event_time = event["Start Frame"]
+            if event_time >= sequence["StartFrame"] and event_time <= sequence["EndFrame"]: 
+                sequence_candidates.append(sequence)
+
+
+        for sequence in sequence_candidates:
+            if sequence["Team"] == team:
+                return sequence
+            
+        return None
