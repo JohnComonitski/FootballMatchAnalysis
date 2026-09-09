@@ -326,4 +326,3 @@ def related_event(match, event):
             prev_event = match.events.iloc[index - 1]
             if prev_event["Type"] == "CHALLENGE" and prev_event["Subtype"] == "GROUND-FAULT-LOST":
                 return prev_event
-        
