@@ -105,14 +105,27 @@ class Match:
         team = events.loc[events["From"] == name, "Team"].iloc[0]
         return team
 
-    def get_event(self, frame):
-        row = self.events[self.events["Start Frame"] == frame]
+    def get_event(self, frame, from_player=None, to_player=None):
+        rows = self.events[self.events["Start Frame"] == frame]
 
-        if row.empty:
+        if rows.empty:
             return None
-        else:
-            return row.iloc[0]
-    
+
+        if from_player is not None:
+            if str(type(from_player)) == "<class 'FootballMatchAnalysis.objects.player.Player'>":
+                from_player = f"Player{from_player.name}"
+            rows = rows[rows["From"] == from_player]
+
+        if to_player is not None:
+            if str(type(to_player)) == "<class 'FootballMatchAnalysis.objects.player.Player'>":
+                to_player = f"Player{to_player.name}"
+            rows = rows[rows["From"] == to_player]
+
+        if rows.empty:
+            return None
+
+        return rows.iloc[0]
+
     def get_moment(self, frame):
         time = round(int(frame) * 0.04, 2)
         state = self.current_state(time)
@@ -683,3 +696,24 @@ class Match:
                 return sequence
             
         return None
+
+    def formation(self, team_id, minute=None):
+        raw_data = self.raw_events
+        formationMapping = raw_data["formationIdNameMappings"]
+
+        team = None
+        if str(raw_data["matchCentreData"]["home"]["teamId"]) == str(team_id):
+            team = raw_data["matchCentreData"]["home"]
+
+        if str(raw_data["matchCentreData"]["away"]["teamId"]) == str(team_id):
+            team = raw_data["matchCentreData"]["away"]
+
+        if team is None:
+            return None
+        
+        if minute == None:
+            minute = 1
+
+        for formation in team["formations"]:
+            if minute >= formation["startMinuteExpanded"] and minute <= formation["endMinuteExpanded"]:
+                return formationMapping[str(formation["formationId"])]

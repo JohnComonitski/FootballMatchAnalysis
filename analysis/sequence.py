@@ -72,6 +72,11 @@ def events_in_sequence(match, sequence, shave_ends=True):
 
     return sequence_events
 
+def sequence_end(match, sequence):
+    events = events_in_sequence(match, sequence)
+    final_event = events.iloc[-1]
+    return f"{final_event["Type"]}/{final_event["Subtype"]}"
+
 def sequence_xg(match, sequence):
     events = events_in_sequence(match, sequence)
     team = sequence['Team']
@@ -106,3 +111,15 @@ def sequence_xt(match, sequence):
         xt = get_xt((final_event["Start X"] + .1, final_event["Start Y"] + .1), invert=invert)
 
     return xt
+
+def sequence_from_event(match, event):
+    sequences = match.sequences
+    event_start = event["Start Frame"]
+    
+    for sequence in sequences:
+        start = sequence["StartFrame"]
+        end = sequence["EndFrame"]
+
+        if event_start >= start and event_start <= end:
+            return sequence
+            

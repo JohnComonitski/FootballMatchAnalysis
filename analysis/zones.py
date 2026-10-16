@@ -34,3 +34,17 @@ def what_zone( coords ):
         if x > rect[0][0] and x <= rect[2][0]:
             if y > rect[1][1] and y <= rect[0][1]:
                 return zone
+
+def what_lane(coords):
+    x, y = coords
+
+    if y >= 20.1:
+        return "Left Channel"
+    elif y >= 9:
+        return "Left Half-Space"
+    elif y >= -9:
+        return "Central"
+    elif y >= -20.1:
+        return "Right Half-Space"
+    else:
+        return "Right Channel"
