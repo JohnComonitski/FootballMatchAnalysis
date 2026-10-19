@@ -532,7 +532,7 @@ class Match:
                 current_sequence.append(possession)
             else:
                 if length < 24:
-                    if self.time_on_ball[idx+1]["Team"] == team_on_ball:
+                    if ((idx+1) < len(self.time_on_ball)) and self.time_on_ball[idx+1]["Team"] == team_on_ball:
                         current_sequence.append(possession)
                     else:
                         raw_sequences.append(current_sequence)
