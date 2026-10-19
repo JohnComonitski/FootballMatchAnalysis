@@ -551,14 +551,15 @@ class Match:
 
         sequences = []
         for raw_sequence in raw_sequences:
-            sequence = {
-                "Team" : raw_sequence[0]["Team"],
-                "StartFrame" : raw_sequence[0]["StartFrame"],
-                "EndFrame" : raw_sequence[-1]["EndFrame"],
-                "Period" : raw_sequence[0]["Period"],
-                "Possessions" : raw_sequence
-            }
-            sequences.append(sequence)
+            if(len(raw_sequences) > 0):
+                sequence = {
+                    "Team" : raw_sequence[0]["Team"],
+                    "StartFrame" : raw_sequence[0]["StartFrame"],
+                    "EndFrame" : raw_sequence[-1]["EndFrame"],
+                    "Period" : raw_sequence[0]["Period"],
+                    "Possessions" : raw_sequence
+                }
+                sequences.append(sequence)
 
         self.sequences = sequences
 
