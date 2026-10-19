@@ -40,20 +40,20 @@ def is_progressive_carry(match, possession, player=None):
     if int(end) - int(start) < 24:
         return False
 
-    start_event = match.get_event(start, from_player=possession["Player"])
-    if start_event is None:
-        start_event = match.get_event(start, to_player=possession["Player"])
-
-    end_event = match.get_event(end, from_player=possession["Player"])
+    start_event = how_possession_starts(match, possession)
+    end_event = how_possession_ends(match, possession)
 
     if start_event is None or end_event is None:
-        return False
+        return None 
 
-    start_x = start_event["Start X"]
-    if str(start_event["End X"]) != "nan":
-        start_x = start_event["End X"]
-
-    end_x = end_event["Start X"]
+    start_point = possession_starting_location(match, possession)
+    end_point = possession_ending_location(match, possession)
+    
+    if start_point is None or end_point is None:
+        return None 
+    
+    start_x = start_point[0]
+    end_x = end_point[0]
 
     is_attacking_right = match.is_attacking_right(player)
     if is_attacking_right:
@@ -82,23 +82,22 @@ def is_carry(match, possession, player=None):
     if int(end) - int(start) < 24:
         return False
 
-    start_event = match.get_event(start, from_player=possession["Player"])
-    if start_event is None:
-        start_event = match.get_event(start, to_player=possession["Player"])
-
-    end_event = match.get_event(end, from_player=possession["Player"])
+    start_event = how_possession_starts(match, possession)
+    end_event = how_possession_ends(match, possession)
 
     if start_event is None or end_event is None:
-        return False
+        return None 
 
-    start_x = start_event["Start X"]
-    start_y = start_event["Start Y"]
-    if str(start_event["End X"]) != "nan":
-        start_x = start_event["End X"]
-        start_y = start_event["End Y"]
-
-    end_x = end_event["Start X"]
-    end_y = end_event["Start Y"]
+    start_point = possession_starting_location(match, possession)
+    end_point = possession_ending_location(match, possession)
+    
+    if start_point is None or end_point is None:
+        return None 
+    
+    start_x = start_point[0]
+    start_y = start_point[1]
+    end_x = end_point[0]
+    end_y = end_point[1]
 
     dist = distance((start_x, start_y), (end_x, end_y))
     if dist >= 5:
@@ -126,23 +125,22 @@ def possession_to_event(match, possession, player=None):
     end = possession["EndFrame"]
     end_time = round(end / 24, 2)
 
-    start_event = match.get_event(start, from_player=player)
-    if start_event is None:
-        start_event = match.get_event(start, to_player=player)
-
-    end_event = match.get_event(end, from_player=player)
+    start_event = how_possession_starts(match, possession)
+    end_event = how_possession_ends(match, possession)
 
     if start_event is None or end_event is None:
         return None 
-    
-    start_x = start_event["Start X"]
-    start_y = start_event["Start Y"]
-    if str(start_event["End X"]) != "nan":
-        start_x = start_event["End X"]
-        start_y = start_event["End Y"]
 
-    end_x = end_event["Start X"]
-    end_y = end_event["Start Y"]
+    start_point = possession_starting_location(match, possession)
+    end_point = possession_ending_location(match, possession)
+    
+    if start_point is None or end_point is None:
+        return None 
+    
+    start_x = start_point[0]
+    start_y = start_point[1]
+    end_x = end_point[0]
+    end_y = end_point[1]
 
     event = {
         "Team": possession["Team"],
