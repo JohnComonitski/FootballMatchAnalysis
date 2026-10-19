@@ -551,7 +551,7 @@ class Match:
 
         sequences = []
         for raw_sequence in raw_sequences:
-            if(len(raw_sequences) > 0):
+            if(len(raw_sequence) > 0):
                 sequence = {
                     "Team" : raw_sequence[0]["Team"],
                     "StartFrame" : raw_sequence[0]["StartFrame"],
