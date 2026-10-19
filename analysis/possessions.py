@@ -333,7 +333,7 @@ def does_possession_end_positively(match, possession):
     if event is None:
         return None
     
-    how_it_ended = f"{event["Type"]}/{event["Subtype"]}"
+    how_it_ended = f"{event['Type']}/{event['Subtype']}"
 
     if "PASS" in how_it_ended:
         return True
