@@ -239,12 +239,96 @@ def get_next_possession(match, possession):
 
     return None
 
+def possession_events(match, possession):
+    start_frame = possession["StartFrame"]
+    end_frame = possession["EndFrame"]
+
+    events = match.events
+    events = events[(((events["Start Frame"] >= start_frame) | (events["End Frame"] >= start_frame)) & ((events["End Frame"] <= end_frame) | (events["Start Frame"] <= end_frame)))]
+
+    return events
+
+def how_possession_starts(match, possession):
+    if is_valid_possession(possession) == False:
+        return None
+
+    starting_event_types = ["PASS", "RECOVERY", "SET PIECE"]
+
+    start_frame = possession["StartFrame"]
+
+    events = match.events
+    possible_events = events[(events["Start Frame"] == start_frame) | (events["End Frame"] == start_frame)]
+    possible_events = possible_events[((possible_events["From"] == possession["Player"]) | (possible_events["To"] == possession["Player"]))]
+
+    if(len(possible_events) == 0):
+        possible_events = events[(events["Start Frame"] == start_frame) | (events["End Frame"] == start_frame)]
+        
+    if(len(possible_events) == 0):
+        return None
+
+    if(len(possible_events) == 1):
+        event = possible_events.iloc[0]
+        if event["Type"] not in starting_event_types:
+            return None
+        return possible_events.iloc[0]
+
+    for i, event in possible_events.iterrows():
+        if event["Type"] in starting_event_types:
+            return event
+
+    return possible_events.iloc[0]
+
 def how_possession_ends(match, possession):
     if is_valid_possession(possession) == False:
         return None
 
-    end_moment = match.get_moment(possession["EndFrame"])
-    return end_moment.event
+    ending_event_types = ["PASS", "BALL LOST", "BALL OUT", "SHOT", "FAULT RECEIVED"] 
+
+    end_frame = possession["EndFrame"]
+
+    events = match.events
+    possible_events = events[(events["Start Frame"] == end_frame)]
+    possible_events = possible_events[((possible_events["From"] == possession["Player"]) | (possible_events["To"] == possession["Player"]))]
+
+    if(len(possible_events) == 0):
+        return None
+
+    if(len(possible_events) == 1):
+        event = possible_events.iloc[0]
+        if event["Type"] not in ending_event_types:
+            return None
+
+        return event
+
+    for i, event in possible_events.iterrows():
+        if event["Type"] in ending_event_types:
+            return event
+
+    all_events = possession_events(match, possession)
+    for i, event in all_events.iterrows():
+        if event["Type"] in ending_event_types:
+            return event
+
+    return possible_events.iloc[-1]
+
+def possession_starting_location(match, possession):
+    event = how_possession_starts(match, possession)
+
+    if event is None:
+        return None
+
+    if event["Type"] in ["PASS"]:
+        return ( event["End X"], event["End Y"] )
+    else:
+        return ( event["Start X"], event["Start Y"] )
+
+def possession_ending_location(match, possession):
+    event = how_possession_ends(match, possession)
+
+    if event is None:
+        return None
+
+    return ( event["Start X"], event["Start Y"] )
 
 def does_possession_end_positively(match, possession):
     event = how_possession_ends(match, possession)
@@ -261,7 +345,7 @@ def does_possession_end_positively(match, possession):
         return False
     elif "SHOT" in how_it_ended:
         return True
-    elif how_it_ended in ['BALL LOST/nan',]:
+    elif how_it_ended in ['BALL LOST/nan']:
         return False
     elif how_it_ended in ['BALL LOST/FORCED', 'CHALLENGE/TACKLE-LOST','CHALLENGE/GROUND-LOST','CHALLENGE/TACKLE-FAULT-LOST','BALL LOST/THEFT']:
         return False
@@ -269,3 +353,38 @@ def does_possession_end_positively(match, possession):
         return True
     elif how_it_ended in ['BALL LOST/CLEARANCE']:
         return True
+
+def previous_possession(match, possession):
+    possessions = match.time_on_ball
+    idx = possession["Index"]
+
+    if idx == 0:
+        return None
+
+    return possessions[idx-1]
+
+def next_possession(match, possession):
+    possessions = match.time_on_ball
+    idx = possession["Index"]
+
+    if idx == len(possessions):
+        return None
+
+    return possessions[idx+1]
+
+def starts_with_dead_ball(match, possession):
+    event = how_possession_starts(match, possession)
+
+    if event is None:
+        return False
+
+    if event["Type"] == "SET PIECE":
+        return True
+
+    if event["Subtype"] == "GOAL KICK":
+        return True
+        
+    return False
+
+def starts_with_live_ball(match, possession):
+    return not starts_with_live_ball(match, possession)

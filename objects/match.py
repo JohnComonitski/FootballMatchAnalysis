@@ -231,7 +231,8 @@ class Match:
                 has_moment = False
 
     def get_time_on_ball(self, start=None, end=None, return_res=None):
-        skip_events = [ "CHALLENGE", "SET PIECE", "FREE KICK", "CARD", "FAULT RECEIVED" ]
+        possessions_to_watch = []
+        skip_events = [ "CHALLENGE", "CARD", "FAULT RECEIVED" ]
         if start is None:
             start = 0
 
@@ -268,13 +269,17 @@ class Match:
             current_possession["Period"] = event["Period"]
 
         for i, event in events.iterrows():
-            #if(len(possessions) == 577):
-            #    print(current_possession)
-            #    print()
-            #    print(i)
-            #    print(event)
+            if(len(possessions) in possessions_to_watch):
+                print(f"Num Possession: {len(possessions)}")
+                print(current_possession)
+                print()
+                print(i)
+                print(event)
+                print(event["Details"])
 
             if current_possession["StartFrame"] is None and ( event["Type"] not in skip_events ) and ( event["Type"] not in ["BALL LOST", "BALL OUT", "PASS"] ):
+                if(len(possessions) in possessions_to_watch):
+                    print("START NEW POSSESSION")
                 current_possession["Team"] = event["Team"]
                 current_possession["Player"] = event["From"]
                 current_possession["StartFrame"] = event["Start Frame"]
@@ -287,10 +292,10 @@ class Match:
                     current_possession["Period"] = event["Period"] 
 
                 if event["Type"] == "PASS":
-                    if i-1 in events.index:
-                        last_event = events.loc[i-1]
-                        if last_event["Type"] == "SET PIECE" or event["Subtype"] == "GOAL KICK":
-                            current_possession["StartFrame"] = event["Start Frame"]
+                    #if i-1 in events.index:
+                    #    last_event = events.loc[i-1]
+                    #    if last_event["Type"] == "SET PIECE" or event["Subtype"] == "GOAL KICK":
+                    #        current_possession["StartFrame"] = event["Start Frame"]
                     
                     #Possesion of pass giver
                     current_possession["Team"] = event["Team"]
@@ -299,6 +304,10 @@ class Match:
                     current_possession["Period"] = event["Period"]
 
                     last_possession = current_possession.copy()
+                    if(len(possessions) in possessions_to_watch):
+                        print("Add Possession")
+                        print(last_possession)
+                        print()
                     possessions.append(last_possession)
                     current_possession = {
                         "StartFrame" : None,
@@ -321,6 +330,10 @@ class Match:
                             #Half is Over
                             current_possession["EndFrame"] = event["Start Frame"]
                             last_possession = current_possession.copy()
+                            if(len(possessions) in possessions_to_watch):
+                                print("Add Possession")
+                                print(last_possession)
+                                print()
                             possessions.append(last_possession)
 
                             #Kick Start new ball sequence
@@ -332,13 +345,18 @@ class Match:
                                 "Period" : None
                             }
                         elif last_event["Type"] == "SET PIECE":
+
                             current_possession["Team"] = event["Team"]
                             current_possession["Player"] = event["From"]
-                            current_possession["StartFrame"] = event["Start Frame"]
+                            #current_possession["StartFrame"] = event["Start Frame"]
                             current_possession["Period"] = event["Period"]
 
                             current_possession["EndFrame"] = event["Start Frame"]
                             last_possession = current_possession.copy()
+                            if(len(possessions) in possessions_to_watch):
+                                print("Add Possession")
+                                print(last_possession)
+                                print()
                             possessions.append(last_possession)
 
                             current_possession = {
@@ -351,6 +369,10 @@ class Match:
                         elif(current_possession["Player"] == event["From"]):
                             current_possession["EndFrame"] = event["Start Frame"]
                             last_possession = current_possession.copy()
+                            if(len(possessions) in possessions_to_watch):
+                                print("Add Possession")
+                                print(last_possession)
+                                print()
                             possessions.append(last_possession)
 
                             current_possession = {
@@ -364,6 +386,10 @@ class Match:
                     if current_possession["StartFrame"] is not None:
                         current_possession["EndFrame"] = event["Start Frame"]
                         last_possession = current_possession.copy()
+                        if(len(possessions) in possessions_to_watch):
+                            print("Add Possession")
+                            print(last_possession)
+                            print()
                         possessions.append(last_possession)
 
                         current_possession = {
@@ -381,6 +407,10 @@ class Match:
                             current_possession["EndFrame"] = event["Start Frame"]
 
                             last_possession = current_possession.copy()
+                            if(len(possessions) in possessions_to_watch):
+                                print("Add Possession")
+                                print(last_possession)
+                                print()
                             possessions.append(last_possession)
                     current_possession["Team"] = event["Team"]
                     current_possession["Player"] = event["From"]
@@ -396,6 +426,10 @@ class Match:
                     #End of Possession
                     current_possession["EndFrame"] = event["Start Frame"]
                     last_possession = current_possession.copy()
+                    if(len(possessions) in possessions_to_watch):
+                        print("Add Possession")
+                        print(last_possession)
+                        print()
                     possessions.append(last_possession)
 
                     #Kick Start new ball sequence
@@ -419,6 +453,10 @@ class Match:
                     #End of Possession
                     current_possession["EndFrame"] = event["Start Frame"]
                     last_possession = current_possession.copy()
+                    if(len(possessions) in possessions_to_watch):
+                        print("Add Possession")
+                        print(last_possession)
+                        print()
                     possessions.append(last_possession)
 
                     #Kick Start new ball sequence
@@ -433,6 +471,10 @@ class Match:
                     #End of Possession
                     current_possession["EndFrame"] = event["Start Frame"]
                     last_possession = current_possession.copy()
+                    if(len(possessions) in possessions_to_watch):
+                        print("Add Possession")
+                        print(last_possession)
+                        print()
                     possessions.append(last_possession)
                     
                     #Kick Start new ball sequence
@@ -443,6 +485,11 @@ class Match:
                         "Player" : None,
                         "Period" : None
                     }
+
+        idx = 0
+        for possession in possessions:
+            possessions[idx]["Index"] = idx
+            idx +=1
 
         if return_res:
             return possessions
